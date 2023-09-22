@@ -1,41 +1,33 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { instance } from "./config/constants";
+import { useState } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import AuthProvider from "./contexts/AuthProvider";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Home from "./pages/Home";
+import Read from "./pages/Read";
+import { StackParamList } from "./types";
+import BookProvider from "./contexts/BookProvider";
+
+const Stack = createNativeStackNavigator<StackParamList>();
 
 export default function App() {
-  const [text, setText] = useState<string>("");
-
-  async function fetchText() {
-    try {
-      const res = await instance.get(
-        "/chapter?bible=de4e12af7f28f599-02&chapter=GEN.1"
-      );
-      setText(res.data.content);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
-  }
-
-  useEffect(() => {
-    fetchText();
-  }, []);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   return (
-    <ScrollView style={styles.container}>
-      <Text>{text}</Text>
+    <NavigationContainer onReady={() => setMounted(true)}>
+      <AuthProvider mounted={mounted}>
+        <BookProvider>
+          <Stack.Navigator initialRouteName="Read">
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Read" component={Read} />
+          </Stack.Navigator>
+        </BookProvider>
+      </AuthProvider>
       <StatusBar style="auto" />
-    </ScrollView>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
-    paddingVertical: 40,
-    paddingHorizontal: 20
-  },
-});
