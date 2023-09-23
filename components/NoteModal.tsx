@@ -20,8 +20,8 @@ export default function NoteModal({ note, close }: NoteModalProps) {
       {note !== null && (
         <>
           <Text>
-            {note.lines.map((l) => (
-              <Text>{l}</Text>
+            {note.lines.map((l, i) => (
+              <Text key={i}>{i+1} {l}</Text>
             ))}
           </Text>
           <Text>{note?.content}</Text>

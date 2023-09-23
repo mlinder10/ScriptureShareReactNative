@@ -1,10 +1,15 @@
-import { BooksSchema, ChaptersSchema, NoteSchema, UserSchema } from "./config/schemas";
+import {
+  BooksSchema,
+  ChaptersSchema,
+  NoteSchema,
+  UserSchema,
+} from "./config/schemas";
 import { z } from "zod";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type UserType = z.infer<typeof UserSchema>;
 
-export type NoteType = z.infer<typeof NoteSchema>
+export type NoteType = z.infer<typeof NoteSchema>;
 
 export type BookContextType = {
   version: string;
@@ -12,10 +17,7 @@ export type BookContextType = {
   chapter: string;
   bookOptions: z.infer<typeof BooksSchema>[];
   getLocalData: () => Promise<void>;
-  setBookData: (
-    version: string,
-    chapter: string
-  ) => Promise<void>;
+  setBookData: (version: string, chapter: string) => Promise<void>;
 };
 
 export type AuthContextType = {
@@ -32,7 +34,6 @@ export type AuthContextType = {
   logout: () => void;
   updateUser: (user: UserType) => void;
   setToken: (token: string) => Promise<void>;
-  mounted: boolean;
 };
 
 export type StackParamList = {
@@ -40,6 +41,7 @@ export type StackParamList = {
   Login: undefined;
   Home: undefined;
   Read: undefined;
+  Account: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<StackParamList>;

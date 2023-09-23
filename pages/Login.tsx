@@ -1,14 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import { useNavigation } from "@react-navigation/native";
-import { NavigationProps } from "../types";
+import { replace } from "../config/navigation";
 
 export default function Login() {
   const { loginWithUsernameAndPassword } = useContext(AuthContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigation = useNavigation<NavigationProps>();
 
   function handleLogin() {
     loginWithUsernameAndPassword(username, password);
@@ -20,17 +18,17 @@ export default function Login() {
       <TextInput
         placeholder="Username"
         value={username}
-        onChangeText={() => setUsername(username)}
+        onChangeText={(username) => setUsername(username)}
       />
       <TextInput
         placeholder="Password"
         value={password}
-        onChangeText={() => setPassword(password)}
+        onChangeText={(password) => setPassword(password)}
       />
       <TouchableOpacity onPress={handleLogin}>
         <Text>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+      <TouchableOpacity onPress={() => replace("Signup")}>
         <Text>Sign Up</Text>
       </TouchableOpacity>
     </View>

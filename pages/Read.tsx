@@ -14,7 +14,7 @@ import VersionModal from "../components/VersionModal";
 import BookModal from "../components/BookModal";
 import { instanceBackend } from "../config/constants";
 import { NoteType } from "../types";
-import Note from "../components/Note";
+import Notes from "../components/Notes";
 import NoteModal from "../components/NoteModal";
 
 export default function Read() {
@@ -83,12 +83,19 @@ export default function Read() {
     setSelectedLines([]);
   }
 
-  function getNote(lineNum: number) {
+  // loops through all lines, looping through all notes,
+  // n = lines
+  // m = notes
+  // lines = ~30
+  // notes = 0 - ?
+  // O(n + nm)
+  function getNotes(lineNum: number) {
+    let validNotes = []
     for (const note of notes) {
       if (note.lineNumbers[note.lineNumbers.length - 1] === lineNum)
-        return note;
+        validNotes.push(note);
     }
-    return null;
+    return validNotes;
   }
 
   useEffect(() => {
@@ -135,7 +142,7 @@ export default function Read() {
               >
                 {i + 1 + " " + l}
               </Text>
-              <Note note={getNote(i + 1)} setNote={setOpenNote} />
+              <Notes notes={getNotes(i + 1)} setNote={setOpenNote} />
             </Fragment>
           ))}
         </Text>
@@ -164,8 +171,8 @@ export default function Read() {
         visible={createNoteModalOpen}
         lineNumbers={selectedLines}
         lines={lines.slice(
-          selectedLines[0],
-          selectedLines[selectedLines.length - 1] + 1
+          selectedLines[0] - 1,
+          selectedLines[selectedLines.length - 1]
         )}
         fetchNotes={fetchNotes}
         close={() => setSelectedLines([])}

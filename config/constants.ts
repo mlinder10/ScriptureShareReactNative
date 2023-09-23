@@ -41,5 +41,4 @@ export const AuthProviderDefault = {
   updateUser: () => {},
   setToken: async () => {},
   getLocalData: async () => null,
-  mounted: false,
 };

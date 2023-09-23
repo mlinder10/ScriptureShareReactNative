@@ -6,15 +6,16 @@ import { instanceBackend } from "../config/constants";
 export default function useAuth() {
   const [user, setUser] = useState<UserType | null>(null);
 
-  // useEffect(() => {
-  //   loginWithToken();
-  // }, []);
+  useEffect(() => {
+    loginWithToken();
+  }, []);
 
   async function loginWithToken() {
     try {
-      const token = await AsyncStorage.getItem("SSToken");
-      const res = await instanceBackend.get(`/auth/token?token=${token}`);
-      console.log(res.data);
+      const user = await AsyncStorage.getItem("SSUser");
+      const token = JSON.parse(user || "undefined").token._id;
+      const res = await instanceBackend.get(`/auth/${token}`);
+      updateUser(res.data.user)
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -28,7 +29,7 @@ export default function useAuth() {
       const res = await instanceBackend.get(
         `/auth?username=${username}&password=${password}`
       );
-      console.log(res.data);
+      updateUser(res.data.user)
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -42,6 +43,7 @@ export default function useAuth() {
     if (password !== confirmPassword) return;
     try {
       const res = await instanceBackend.post("/auth", { username, password });
+      updateUser(res.data.user)
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -55,17 +57,17 @@ export default function useAuth() {
     }
   }
 
-  async function logout() {
+  function logout() {
+    updateUser(null)
+  }
+
+  async function updateUser(newUser: UserType | null) {
     try {
-      setUser(null);
-      await AsyncStorage.setItem("ss-token", "");
+      setUser(newUser);
+      await AsyncStorage.setItem("SSUser", JSON.stringify(newUser));
     } catch (err: any) {
       console.error(err?.message);
     }
-  }
-
-  function updateUser(newUser: UserType | null) {
-    setUser(newUser);
   }
 
   return {
