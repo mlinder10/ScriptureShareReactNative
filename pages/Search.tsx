@@ -5,8 +5,14 @@ import {
   TouchableOpacity,
   View,
   Keyboard,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { BookContext } from "../contexts/BookProvider";
 import { instanceAPI } from "../config/constants";
 import { VerseSchema } from "../config/schemas";
@@ -61,7 +67,10 @@ export default function Search() {
         setSearch={setSearch}
         containerStyles={{ paddingTop: 30, backgroundColor: "#fff" }}
       />
-      <ScrollView scrollEventThrottle={16} onScroll={() => Keyboard.dismiss()} style={styles.page} contentContainerStyle={styles.container}>
+      <ScrollView
+        style={styles.page}
+        contentContainerStyle={styles.container}
+      >
         {verses.map((v) => (
           <View style={styles.verse} key={v.id}>
             <Text style={styles.chapter}>{v.reference}</Text>

@@ -1,10 +1,4 @@
-import {
-  BooksSchema,
-  ChaptersSchema,
-  NoteSchema,
-  UserSchema,
-  VerseSchema,
-} from "./schemas";
+import { BooksSchema, NoteSchema, UserSchema, VerseSchema } from "./schemas";
 import { z } from "zod";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -39,6 +33,11 @@ export type AuthContextType = {
   setToken: (token: string) => Promise<void>;
 };
 
+type LineType = {
+  text: string[];
+  numbers: number[];
+};
+
 export type StackParamList = {
   Signup: undefined;
   Login: undefined;
@@ -46,6 +45,11 @@ export type StackParamList = {
   Read: undefined;
   Search: undefined;
   Account: undefined;
+  ChangeVersion: undefined;
+  ChangeChapter: undefined;
+  ReadNote: { note: NoteType };
+  CreateNote: { lines: LineType };
+
 };
 
 export type NavigationProps = NativeStackNavigationProp<StackParamList>;

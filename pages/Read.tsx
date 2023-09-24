@@ -4,41 +4,51 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { createRef, useContext, useEffect, useState } from "react";
 import { getChapter } from "../config/helpers";
 import { Ionicons } from "@expo/vector-icons";
-import CreateNoteModal from "../components/CreateNoteModal";
 import { BookContext } from "../contexts/BookProvider";
-import VersionModal from "../components/VersionModal";
-import BookModal from "../components/BookModal";
 import { instanceBackend } from "../config/constants";
 import { NoteType } from "../config/types";
-import Notes from "../components/Notes";
-import NoteModal from "../components/NoteModal";
+import ReadHeader from "../components/ReadHeader";
+import Line from "../components/Line";
+
+type ContentType = {
+  lines: string[];
+  next: string;
+  previous: string;
+};
+
+const defaultContent = {
+  lines: [],
+  next: "",
+  previous: "",
+};
 
 export default function Read() {
   const { version, book, chapter, setBookData } = useContext(BookContext);
-  const [lines, setLines] = useState<string[]>([]);
+  const [content, setContent] = useState<ContentType>(defaultContent);
   const [notes, setNotes] = useState<NoteType[]>([]);
-  const [previous, setPrevious] = useState<string>("");
-  const [next, setNext] = useState<string>("");
-  const [bookModalVisible, setBookModalVisible] = useState<boolean>(false);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
-  const [createNoteModalOpen, setCreateNoteModalOpen] =
-    useState<boolean>(false);
-  const [versionModalodalVisible, setVersionModalodalVisible] =
-    useState<boolean>(false);
-  const [openNote, setOpenNote] = useState<NoteType | null>(null);
+  const [scrolling, setScrolling] = useState<boolean>(false);
+  const [prevScroll, setPrevScroll] = useState<number>(0);
+  const scrollRef = createRef<ScrollView>();
 
   async function fetchLines() {
+    setContent({ lines: [], next: content.next, previous: content.previous });
     try {
       const res = await getChapter(version, chapter);
       if (res === null) return;
-      setLines(res.content);
-      setPrevious(res.previous);
-      setNext(res.next);
-      if (chapter.length > 5 && res.content.length === 0) setLines(["Intro"]);
+      setContent({
+        lines: res.content,
+        next: res.next,
+        previous: res.previous,
+      });
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -83,12 +93,6 @@ export default function Read() {
     setSelectedLines([]);
   }
 
-  // loops through all lines, looping through all notes,
-  // n = lines
-  // m = notes
-  // lines = ~30
-  // notes = 0 - ?
-  // O(n + nm)
   function getNotes(lineNum: number) {
     let validNotes = [];
     for (const note of notes) {
@@ -98,90 +102,90 @@ export default function Read() {
     return validNotes;
   }
 
+  function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    const currentScroll = event.nativeEvent.contentOffset.y;
+    const height =
+      event.nativeEvent.contentSize.height - Dimensions.get("window").height;
+    if (
+      (currentScroll < prevScroll && currentScroll < height - 30) ||
+      currentScroll < 30
+    )
+      setScrolling(false);
+    else setScrolling(true);
+
+    setPrevScroll(currentScroll);
+  }
+
+  function handlePageChange(direction: "next" | "last") {
+    setSelectedLines([]);
+    if (direction === "next") setBookData(version, content.next);
+    else setBookData(version, content.previous);
+  }
+
   useEffect(() => {
     fetchNotes();
     fetchLines();
+    scrollRef.current?.scrollTo({ y: 0, animated: false });
   }, [version, book, chapter]);
-
-  useEffect(() => {
-    if (selectedLines.length === 0) setCreateNoteModalOpen(false);
-    else setCreateNoteModalOpen(true);
-  }, [selectedLines]);
 
   return (
     <View style={{ flex: 1 }}>
+      <ReadHeader
+        scroll={scrolling}
+        lines={{
+          numbers: selectedLines,
+          text: content.lines.slice(
+            selectedLines[0] - 1,
+            selectedLines[selectedLines.length - 1]
+          ),
+        }}
+      />
       <ScrollView
+        ref={scrollRef}
         style={{ flex: 4 }}
         contentContainerStyle={styles.textContainer}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        <View style={styles.btnContainer}>
-          <TouchableOpacity
-            style={styles.versionBtn}
-            onPress={() => setVersionModalodalVisible(true)}
-          >
-            <Text style={styles.text}>Version</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bookBtn}
-            onPress={() => setBookModalVisible(true)}
-          >
-            <Text style={styles.text}>{book}</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={{ fontSize: 18, lineHeight: 28 }}>
-          {lines.map((l, i) => (
-            <Fragment key={i}>
-              <Text
-                style={{
-                  textDecorationLine: selectedLines.includes(i + 1)
-                    ? "underline"
-                    : "none",
-                  textDecorationColor: "#08f",
-                }}
-                onPress={() => handleOpenCreateNoteModal(i + 1)}
-              >
-                {i + 1 + " " + l}
-              </Text>
-              <Notes notes={getNotes(i + 1)} setNote={setOpenNote} />
-            </Fragment>
-          ))}
-        </Text>
-        {lines.length !== 0 && (
+        {content.lines.length === 0 ? (
+          <ActivityIndicator
+            size="large"
+            color="black"
+            style={{ marginTop: 200 }}
+          />
+        ) : (
           <>
-            <TouchableOpacity
-              style={styles.previous}
-              onPress={() => setBookData(version, previous)}
-            >
-              <Ionicons name="arrow-back" style={styles.text} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.next}
-              onPress={() => setBookData(version, next)}
-            >
-              <Ionicons name="arrow-forward" style={styles.text} />
-            </TouchableOpacity>
+            <Text style={{ fontSize: 18, lineHeight: 28 }}>
+              {content.lines.map((l, i) => (
+                <Line
+                  selectLine={handleOpenCreateNoteModal}
+                  key={i}
+                  number={i + 1}
+                  line={l}
+                  notes={getNotes(i + 1)}
+                  selectedLines={selectedLines}
+                />
+              ))}
+            </Text>
+            <View style={styles.navBtnContainer}>
+              <TouchableOpacity
+                style={styles.navBtn}
+                onPress={() => handlePageChange("last")}
+              >
+                <Ionicons name="arrow-back" style={styles.text} />
+                <Text style={styles.text}>Last</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.navBtn}
+                onPress={() => handlePageChange("next")}
+              >
+                <Text style={styles.text}>Next</Text>
+                <Ionicons name="arrow-forward" style={styles.text} />
+              </TouchableOpacity>
+            </View>
           </>
         )}
       </ScrollView>
-      <VersionModal
-        visible={versionModalodalVisible}
-        close={() => setVersionModalodalVisible(false)}
-      />
-      <BookModal
-        visible={bookModalVisible}
-        close={() => setBookModalVisible(false)}
-      />
-      <CreateNoteModal
-        visible={createNoteModalOpen}
-        lineNumbers={selectedLines}
-        lines={lines.slice(
-          selectedLines[0] - 1,
-          selectedLines[selectedLines.length - 1]
-        )}
-        fetchNotes={fetchNotes}
-        close={() => setSelectedLines([])}
-      />
-      <NoteModal note={openNote} close={() => setOpenNote(null)} />
     </View>
   );
 }
@@ -189,52 +193,24 @@ export default function Read() {
 const styles = StyleSheet.create({
   textContainer: {
     paddingHorizontal: 20,
-    paddingVertical: 60,
   },
-  btnContainer: {
-    position: "absolute",
-    top: 10,
-    left: 10,
+  navBtnContainer: {
+    paddingTop: 20,
+    paddingBottom: 40,
     flexDirection: "row",
-    gap: 5,
+    justifyContent: "space-between",
   },
-  versionBtn: {
+  navBtn: {
+    flexDirection: "row",
     backgroundColor: "#08f",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
-  },
-  bookBtn: {
-    backgroundColor: "#08f",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-  },
-  previous: {
-    position: "absolute",
-    bottom: 10,
-    left: 20,
-    backgroundColor: "#08f",
-    width: 40,
-    aspectRatio: "1/1",
-    justifyContent: "center",
     alignItems: "center",
-    borderRadius: 100,
-  },
-  next: {
-    position: "absolute",
-    bottom: 10,
-    right: 20,
-    backgroundColor: "#08f",
-    width: 40,
-    aspectRatio: "1/1",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
+    gap: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
   },
   text: {
     color: "#fff",
+    fontSize: 16,
   },
 });

@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  Modal,
-  Button,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
@@ -12,14 +10,11 @@ import { BookContext } from "../contexts/BookProvider";
 import { ChaptersSchema } from "../config/schemas";
 import { z } from "zod";
 import { getChapters } from "../config/helpers";
+import { useNavigation } from "@react-navigation/native";
 
-type BookModalProps = {
-  visible: boolean;
-  close: () => void;
-};
-
-export default function BookModal({ visible, close }: BookModalProps) {
-  const { bookOptions, setBookData, version } = useContext(BookContext);
+export default function ChangeChapter() {
+  const { bookOptions, setBookData, version, book } = useContext(BookContext);
+  const navigation = useNavigation();
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const [chapterOptions, setChapterOptions] = useState<
     z.infer<typeof ChaptersSchema>[]
@@ -44,7 +39,7 @@ export default function BookModal({ visible, close }: BookModalProps) {
 
   function handleChapterChange(chapter: string) {
     setBookData(version, chapter);
-    close();
+    navigation.goBack();
     setChapterOptions([]);
     setSelectedBook(null);
   }
@@ -54,27 +49,29 @@ export default function BookModal({ visible, close }: BookModalProps) {
   }, [selectedBook]);
 
   return (
-    <Modal
-      visible={visible}
-      presentationStyle="formSheet"
-      animationType="slide"
-    >
-      <Button title="X" onPress={close} />
+    <View>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.cancel}>Cancel</Text>
+        </TouchableOpacity>
+        <Text>{book}</Text>
+      </View>
       <ScrollView>
         {bookOptions.map((b) => (
           <View key={b.id} style={styles.book}>
             <TouchableOpacity onPress={() => handleSelectBook(b.id)}>
-              <Text>{b.name}</Text>
+              <Text style={styles.abb}>{b.abbreviation}</Text>
+              <Text style={styles.name}>{b.name}</Text>
             </TouchableOpacity>
             {selectedBook === b.id && (
-              <View style={styles.chapterContainer}>
+              <View style={[styles.chapterContainer, {paddingVertical: chapterOptions.length !== 0 ? 20 : 0}]}>
                 {chapterOptions.map((c) => (
                   <TouchableOpacity
                     style={styles.chapter}
                     key={c.id}
                     onPress={() => handleChapterChange(c.id)}
                   >
-                    <Text>{c.number}</Text>
+                    <Text style={{textTransform: "capitalize"}}>{c.number}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -82,28 +79,49 @@ export default function BookModal({ visible, close }: BookModalProps) {
           </View>
         ))}
       </ScrollView>
-    </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  book: {
-    borderBottomColor: "#000",
+  header: {
+    backgroundColor: "#fff",
+    padding: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderBottomWidth: 1,
-    paddingVertical: 15,
+    borderBottomColor: "#ddd",
+  },
+  cancel: {
+    fontSize: 18,
+    color: "#555",
+  },
+  headerBook: {},
+  book: {
+    paddingVertical: 10,
     paddingHorizontal: 20,
-    gap: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  abb: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  name: {
+    fontSize: 12,
   },
   chapterContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 5,
+    gap: 8,
     paddingHorizontal: 10,
   },
   chapter: {
-    width: 40,
-    aspectRatio: "1/1",
-    backgroundColor: "#555",
+    width: 45,
+    height: 45,
+    backgroundColor: "#ddd",
+    borderWidth: 1,
+    borderColor: "#bbb",
     justifyContent: "center",
     alignItems: "center",
   },
