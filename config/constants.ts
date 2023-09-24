@@ -5,6 +5,7 @@ const SERVER = "https://scripture-share-backend.vercel.app";
 const BIBLE_URL = "https://api.scripture.api.bible/v1/";
 const API_KEY = "h4grvubfeo84h23gd";
 const BIBLE_API_KEY = "6470ad3e0c3016155a14bc86781ddb80";
+const DOUAY = "de4e12af7f28f599-02";
 
 export const DEFAULT_VERSION = "de4e12af7f28f599-02";
 export const DEFAULT_BOOK = "GEN";

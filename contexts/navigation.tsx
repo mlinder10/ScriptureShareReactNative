@@ -3,13 +3,15 @@ import {
   NavigationContainerRef,
 } from "@react-navigation/native";
 import {
+  Dispatch,
   ReactNode,
+  SetStateAction,
   createContext,
   createRef,
   useEffect,
   useState,
 } from "react";
-import { StackParamList } from "../types";
+import { StackParamList } from "../config/types";
 
 export const navigationRef =
   createRef<NavigationContainerRef<StackParamList>>();
@@ -28,12 +30,14 @@ export const NavContext = createContext<NavContextType>({
 
 type NavigationProviderProps = {
   children: ReactNode;
+  setLastRoute: Dispatch<SetStateAction<keyof StackParamList>>;
 };
 
 export default function NavigationProvider({
   children,
+  setLastRoute,
 }: NavigationProviderProps) {
-  const [route, setRoute] = useState<keyof StackParamList>("Signup");
+  const [route, setRoute] = useState<keyof StackParamList>("Login");
 
   useEffect(() => {
     const subscribe = navigationRef.current?.addListener("state", () => {
@@ -47,7 +51,8 @@ export default function NavigationProvider({
   }, []);
 
   function replace(screen: keyof StackParamList, params: any = undefined) {
-    const currentRoute = navigationRef.current?.getCurrentRoute();
+    const currentRoute: any = navigationRef.current?.getCurrentRoute();
+    setLastRoute(currentRoute.name);
 
     if (!currentRoute || currentRoute.name === screen) return;
 
@@ -65,6 +70,8 @@ export default function NavigationProvider({
   }
 
   function navigate(screen: keyof StackParamList, params: any = undefined) {
+    const currentRoute: any = navigationRef.current!.getCurrentRoute()!.name;
+    setLastRoute(currentRoute);
     navigationRef.current?.navigate(screen, params);
   }
 

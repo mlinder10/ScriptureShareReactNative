@@ -10,7 +10,7 @@ import {
   DEFAULT_VERSION,
 } from "../config/constants";
 import { z } from "zod";
-import { getBooks } from "../helpers";
+import { getBooks } from "../config/helpers";
 
 export default function useBook() {
   const [version, setVersion] = useState<string>(DEFAULT_VERSION);

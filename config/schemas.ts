@@ -54,6 +54,14 @@ export const ChapterSchema = z.object({
   previous: z.string(),
 });
 
+export const VerseSchema = z.object({
+  id: z.string(),
+  reference: z.string(),
+  text: z.string(),
+  chapterId: z.string(),
+  bookId: z.string(),
+});
+
 export const LocalStorageSchema = z.object({
   version: z.string(),
   book: z.string(),

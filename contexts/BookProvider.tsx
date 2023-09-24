@@ -1,6 +1,6 @@
 import { ReactNode, createContext } from "react";
 import useBook from "../hooks/useBook";
-import { BookContextType } from "../types";
+import { BookContextType } from "../config/types";
 import { BookProviderDefault } from "../config/constants";
 
 export const BookContext = createContext<BookContextType>(BookProviderDefault);

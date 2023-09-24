@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { instanceAPI, instanceBackend } from "./config/constants";
+import { instanceAPI, instanceBackend } from "./constants";
 import {
   BiblesSchema,
   BooksSchema,
   ChapterSchema,
   ChaptersSchema,
-} from "./config/schemas";
+} from "./schemas";
 
 export async function getBibleVersions() {
   try {

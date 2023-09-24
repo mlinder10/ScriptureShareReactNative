@@ -1,13 +1,14 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import { replace } from "../config/navigation";
+import { NavContext } from "../contexts/navigation";
 
 export default function Signup() {
   const { register } = useContext(AuthContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const { replace } = useContext(NavContext);
 
   function handleSignup() {
     register(username, password, confirmPassword);
@@ -40,3 +41,7 @@ export default function Signup() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+
+})

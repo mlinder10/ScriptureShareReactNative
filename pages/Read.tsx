@@ -6,14 +6,14 @@ import {
   View,
 } from "react-native";
 import { Fragment, useContext, useEffect, useState } from "react";
-import { getChapter } from "../helpers";
+import { getChapter } from "../config/helpers";
 import { Ionicons } from "@expo/vector-icons";
 import CreateNoteModal from "../components/CreateNoteModal";
 import { BookContext } from "../contexts/BookProvider";
 import VersionModal from "../components/VersionModal";
 import BookModal from "../components/BookModal";
 import { instanceBackend } from "../config/constants";
-import { NoteType } from "../types";
+import { NoteType } from "../config/types";
 import Notes from "../components/Notes";
 import NoteModal from "../components/NoteModal";
 
@@ -90,7 +90,7 @@ export default function Read() {
   // notes = 0 - ?
   // O(n + nm)
   function getNotes(lineNum: number) {
-    let validNotes = []
+    let validNotes = [];
     for (const note of notes) {
       if (note.lineNumbers[note.lineNumbers.length - 1] === lineNum)
         validNotes.push(note);
@@ -146,18 +146,22 @@ export default function Read() {
             </Fragment>
           ))}
         </Text>
-        <TouchableOpacity
-          style={styles.previous}
-          onPress={() => setBookData(version, previous)}
-        >
-          <Ionicons name="arrow-back" style={styles.text} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.next}
-          onPress={() => setBookData(version, next)}
-        >
-          <Ionicons name="arrow-forward" style={styles.text} />
-        </TouchableOpacity>
+        {lines.length !== 0 && (
+          <>
+            <TouchableOpacity
+              style={styles.previous}
+              onPress={() => setBookData(version, previous)}
+            >
+              <Ionicons name="arrow-back" style={styles.text} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.next}
+              onPress={() => setBookData(version, next)}
+            >
+              <Ionicons name="arrow-forward" style={styles.text} />
+            </TouchableOpacity>
+          </>
+        )}
       </ScrollView>
       <VersionModal
         visible={versionModalodalVisible}

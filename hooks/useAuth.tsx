@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { UserType } from "../types";
+import { UserType } from "../config/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { instanceBackend } from "../config/constants";
 

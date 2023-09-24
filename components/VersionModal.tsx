@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { getBibleVersions } from "../helpers";
+import { getBibleVersions } from "../config/helpers";
 import { BiblesSchema } from "../config/schemas";
 import { z } from "zod";
 import { BookContext } from "../contexts/BookProvider";

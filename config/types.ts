@@ -3,13 +3,16 @@ import {
   ChaptersSchema,
   NoteSchema,
   UserSchema,
-} from "./config/schemas";
+  VerseSchema,
+} from "./schemas";
 import { z } from "zod";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type UserType = z.infer<typeof UserSchema>;
 
 export type NoteType = z.infer<typeof NoteSchema>;
+
+export type VerseType = z.infer<typeof VerseSchema>;
 
 export type BookContextType = {
   version: string;
@@ -41,6 +44,7 @@ export type StackParamList = {
   Login: undefined;
   Home: undefined;
   Read: undefined;
+  Search: undefined;
   Account: undefined;
 };
 

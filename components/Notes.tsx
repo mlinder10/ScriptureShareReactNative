@@ -1,6 +1,6 @@
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { NoteType } from "../types";
+import { NoteType } from "../config/types";
 import { Dispatch, SetStateAction } from "react";
 
 type NoteProps = {

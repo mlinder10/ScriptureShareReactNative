@@ -1,5 +1,5 @@
 import { Modal, Text, TouchableOpacity } from "react-native";
-import { NoteType } from "../types";
+import { NoteType } from "../config/types";
 import { Ionicons } from "@expo/vector-icons";
 
 type NoteModalProps = {

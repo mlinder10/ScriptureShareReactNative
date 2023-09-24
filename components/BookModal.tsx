@@ -11,7 +11,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { BookContext } from "../contexts/BookProvider";
 import { ChaptersSchema } from "../config/schemas";
 import { z } from "zod";
-import { getChapters } from "../helpers";
+import { getChapters } from "../config/helpers";
 
 type BookModalProps = {
   visible: boolean;

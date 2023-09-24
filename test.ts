@@ -1,4 +1,4 @@
-import { getBibleVersions, getBooks, getChapter, getChapters } from "./helpers";
+import { getBibleVersions, getBooks, getChapter, getChapters } from "./config/helpers";
 
 async function test() {
   const bibles = await getBibleVersions();

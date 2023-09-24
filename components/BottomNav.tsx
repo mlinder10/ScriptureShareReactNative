@@ -1,13 +1,11 @@
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { NavContext } from "../config/navigation";
-import { AuthContext } from "../contexts/AuthProvider";
+import { NavContext } from "../contexts/navigation";
 
 export default function BottomNav() {
   const [shown, setShown] = useState<boolean>(false);
   const { route, replace } = useContext(NavContext);
-  const { logout } = useContext(AuthContext);
 
   useEffect(() => {
     if (route === "Login" || route === "Signup") setShown(false);
@@ -25,11 +23,11 @@ export default function BottomNav() {
         <TouchableOpacity onPress={() => replace("Read")}>
           <Ionicons style={styles.text} name="book" />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => replace("Search")}>
+          <Ionicons style={styles.text} name="search" />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => replace("Account")}>
           <Ionicons style={styles.text} name="person" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={logout}>
-          <Ionicons style={styles.text} name="log-out" />
         </TouchableOpacity>
       </View>
     </>
