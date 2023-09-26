@@ -1,9 +1,4 @@
-import {
-  Pressable,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { Text } from "react-native";
 import Notes from "./Notes";
 import { NoteType } from "../config/types";
 
@@ -22,10 +17,16 @@ export default function Line({
   selectedLines,
   selectLine,
 }: LineProps) {
+
+  function handleSelectLine() {
+    if (line !== "\n\t")
+    selectLine(number)
+  }
+
   return (
     <>
       <Text
-        onPress={() => selectLine(number)}
+        onPress={handleSelectLine}
         suppressHighlighting={true}
         style={{
           textDecorationLine: selectedLines.includes(number)
@@ -34,7 +35,7 @@ export default function Line({
           textDecorationColor: "#08f",
         }}
       >
-        {number + " " + line}
+        {line}
       </Text>
       <Notes notes={notes} />
     </>

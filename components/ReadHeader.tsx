@@ -15,7 +15,7 @@ type ReadHeaderProps = {
 
 const scrollContainerStyles = {
   paddingTop: 20,
-  paddingBottom: 10,
+  paddingBottom: 0,
 };
 
 const scrollBtnStyles = {
@@ -28,7 +28,7 @@ export default function ReadHeader({ scroll, lines }: ReadHeaderProps) {
 
   return (
     <View style={[styles.container, scroll ? scrollContainerStyles : null]}>
-      <View style={styles.btnContainer}>
+      <View style={[styles.btnContainer, scroll ? { gap: 2 } : null]}>
         <TouchableOpacity
           style={styles.versionBtn}
           onPress={() => navigate("ChangeVersion")}
@@ -57,6 +57,10 @@ export default function ReadHeader({ scroll, lines }: ReadHeaderProps) {
 
 const styles = StyleSheet.create({
   container: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    zIndex: 1,
     backgroundColor: "#fff",
     flexDirection: "row",
     paddingTop: 30,

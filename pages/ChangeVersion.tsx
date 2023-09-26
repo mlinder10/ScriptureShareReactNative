@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { BookContext } from "../contexts/BookProvider";
 import { useContext, useEffect, useState } from "react";
@@ -49,6 +50,7 @@ export default function ChangeVersion() {
         <Text style={styles.headerVersion}>{version}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
+        {versions.length === 0 && <ActivityIndicator />}
         {versions.map((v) => (
           <TouchableOpacity
             style={styles.version}

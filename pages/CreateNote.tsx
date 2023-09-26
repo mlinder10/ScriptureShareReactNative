@@ -27,7 +27,7 @@ export default function CreateNote({ route, navigation }: CreateNoteProps) {
   async function handlePostNote() {
     try {
       await instanceBackend.post("/note", {
-        lines,
+        lines: lines.text,
         lineNumbers: lines.numbers,
         userId: "testid",
         version,
@@ -61,7 +61,7 @@ export default function CreateNote({ route, navigation }: CreateNoteProps) {
       >
         <Text>
           {lines.text.map((l, i) => (
-            <Text key={i}>{i + 1 + " " + l}</Text>
+            <Text key={i}>{l}</Text>
           ))}
         </Text>
       </ScrollView>
@@ -74,6 +74,8 @@ export default function CreateNote({ route, navigation }: CreateNoteProps) {
           multiline
           placeholder="Your note..."
           keyboardType="ascii-capable"
+          onChangeText={(text) => setInput(text)}
+          value={input}
         />
         <TouchableOpacity style={styles.postBtn} onPress={handlePostNote}>
           <Text style={styles.postBtnText}>Post</Text>

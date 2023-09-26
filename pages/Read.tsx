@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { createRef, useContext, useEffect, useState } from "react";
-import { getChapter } from "../config/helpers";
+import { getChapter, getLineNum } from "../config/helpers";
 import { Ionicons } from "@expo/vector-icons";
 import { BookContext } from "../contexts/BookProvider";
 import { instanceBackend } from "../config/constants";
@@ -65,7 +65,7 @@ export default function Read() {
     }
   }
 
-  function handleOpenCreateNoteModal(number: number) {
+  function handleSelectLine(number: number) {
     if (selectedLines.length === 0) {
       setSelectedLines([number]);
       return;
@@ -148,21 +148,17 @@ export default function Read() {
         scrollEventThrottle={16}
       >
         {content.lines.length === 0 ? (
-          <ActivityIndicator
-            size="large"
-            color="black"
-            style={{ marginTop: 200 }}
-          />
+          <ActivityIndicator style={{ marginTop: 200 }} />
         ) : (
           <>
             <Text style={{ fontSize: 18, lineHeight: 28 }}>
               {content.lines.map((l, i) => (
                 <Line
-                  selectLine={handleOpenCreateNoteModal}
+                  selectLine={handleSelectLine}
                   key={i}
-                  number={i + 1}
+                  number={getLineNum(l)}
                   line={l}
-                  notes={getNotes(i + 1)}
+                  notes={getNotes(getLineNum(l))}
                   selectedLines={selectedLines}
                 />
               ))}
@@ -193,6 +189,7 @@ export default function Read() {
 const styles = StyleSheet.create({
   textContainer: {
     paddingHorizontal: 20,
+    paddingTop: 100,
   },
   navBtnContainer: {
     paddingTop: 20,

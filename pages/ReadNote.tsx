@@ -31,7 +31,7 @@ export default function ReadNote({ route, navigation }: ReadNoteProps) {
           </Text>
           <Text>
             {note.lines.map((l, i) => (
-              <Text key={i}>{i + 1 + " " + l}</Text>
+              <Text key={i}>{l}</Text>
             ))}
           </Text>
         </View>

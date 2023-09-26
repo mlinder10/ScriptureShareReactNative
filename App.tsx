@@ -30,8 +30,16 @@ export default function App() {
               initialRouteName="Login"
               screenOptions={{ animation: "none" }}
             >
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Signup" component={Signup} />
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Signup"
+                component={Signup}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="Home" component={Home} />
               <Stack.Screen
                 name="Read"
@@ -58,7 +66,6 @@ export default function App() {
                 }}
               />
               <Stack.Screen
-                // name="ChangeChapter"
                 name="ChangeChapter"
                 component={ChangeChapter}
                 options={{

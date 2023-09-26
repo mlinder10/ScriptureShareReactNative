@@ -4,15 +4,9 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
-  Keyboard,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
+  ActivityIndicator,
 } from "react-native";
-import {
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useContext, useEffect, useState } from "react";
 import { BookContext } from "../contexts/BookProvider";
 import { instanceAPI } from "../config/constants";
 import { VerseSchema } from "../config/schemas";
@@ -23,7 +17,9 @@ import Searchbar from "../components/Searchbar";
 export default function Search() {
   const { version, setBookData } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
-  const [verses, setVerses] = useState<VerseType[]>([]);
+  const [verses, setVerses] = useState<VerseType[] | "loading" | "no match">(
+    []
+  );
   const [search, setSearch] = useState<string>("");
 
   function handleFind(verse: VerseType) {
@@ -36,6 +32,7 @@ export default function Search() {
 
     async function performSearch() {
       if (search === "") return;
+      setVerses("loading");
       try {
         let newVerses = [];
         const res = await instanceAPI.get(
@@ -48,6 +45,7 @@ export default function Search() {
         }
         setVerses(newVerses);
       } catch (err: any) {
+        setVerses("no match");
         console.error(err?.message);
       }
     }
@@ -67,19 +65,28 @@ export default function Search() {
         setSearch={setSearch}
         containerStyles={{ paddingTop: 30, backgroundColor: "#fff" }}
       />
-      <ScrollView
-        style={styles.page}
-        contentContainerStyle={styles.container}
-      >
-        {verses.map((v) => (
-          <View style={styles.verse} key={v.id}>
-            <Text style={styles.chapter}>{v.reference}</Text>
-            <Text style={styles.text}>{v.text}</Text>
-            <TouchableOpacity style={styles.read} onPress={() => handleFind(v)}>
-              <Text style={styles.readText}>Read</Text>
-            </TouchableOpacity>
+      <ScrollView style={styles.page} contentContainerStyle={styles.container}>
+        {verses === "loading" && (
+          <ActivityIndicator style={{ marginTop: 200 }} />
+        )}
+        {verses === "no match" && (
+          <View>
+            <Text>No matches for {search}</Text>
           </View>
-        ))}
+        )}
+        {typeof verses !== "string" &&
+          verses.map((v) => (
+            <View style={styles.verse} key={v.id}>
+              <Text style={styles.chapter}>{v.reference}</Text>
+              <Text style={styles.text}>{v.text}</Text>
+              <TouchableOpacity
+                style={styles.read}
+                onPress={() => handleFind(v)}
+              >
+                <Text style={styles.readText}>Read</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
       </ScrollView>
     </View>
   );

@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { BookContext } from "../contexts/BookProvider";
@@ -57,6 +58,7 @@ export default function ChangeChapter() {
         <Text>{book}</Text>
       </View>
       <ScrollView>
+        {bookOptions.length === 0 && <ActivityIndicator />}
         {bookOptions.map((b) => (
           <View key={b.id} style={styles.book}>
             <TouchableOpacity onPress={() => handleSelectBook(b.id)}>

@@ -40,11 +40,22 @@ export async function getChapters(version: string, book: string) {
 }
 
 export async function getChapter(version: string, chapter: string) {
-  try {
-    const res = await instanceBackend.get(`/chapter?bible=${version}&chapter=${chapter}`)
-    return ChapterSchema.parse(res.data)
-  } catch (err: any) {
-    console.error(err?.message);
-    return null;
-  }
+  const res = await instanceAPI.get(
+    `/bibles/${version}/chapters/${chapter}?content-type=text&include-titles=false&include-verse-numbers=true`
+  );
+  const next = res.data.data.next.id;
+  const previous = res.data.data.previous.id;
+  const content = res.data.data.content
+    .split(/\[\d{1,2}\]/)
+    .slice(1)
+    .map((v: string, i: number) => (v = `[${i + 1}] ${v}`));
+  return {
+    content,
+    next,
+    previous,
+  };
+}
+
+export function getLineNum(line: string) {
+  return parseInt(line.split("]")[0].split("[")[1]);
 }
