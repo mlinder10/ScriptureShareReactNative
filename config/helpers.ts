@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { instanceAPI, instanceBackend } from "./constants";
 import {
-  BiblesSchema,
-  BooksSchema,
-  ChapterSchema,
-  ChaptersSchema,
-} from "./schemas";
+  IMAGE_API_KEY,
+  IMAGE_URL,
+  instanceAPI,
+  instanceBackend,
+} from "./constants";
+import { BiblesSchema, BooksSchema, ChaptersSchema } from "./schemas";
+import * as FileSystem from "expo-file-system";
 
 export async function getBibleVersions() {
   try {
@@ -58,4 +59,60 @@ export async function getChapter(version: string, chapter: string) {
 
 export function getLineNum(line: string) {
   return parseInt(line.split("]")[0].split("[")[1]);
+}
+
+export function formatVerses(chapter: string, linesNumbers: number[]) {
+  return (
+    chapter.replace(".", " ") +
+    ":" +
+    linesNumbers[0] +
+    (linesNumbers.length !== 1
+      ? "-" + linesNumbers[linesNumbers.length - 1]
+      : "")
+  );
+}
+
+export function shortenContent(content: string) {
+  const arrayContent = content.split(" ");
+  let newContent: string[] = [];
+  let totalChars = 0;
+  for (let i = 0; i < arrayContent.length; i++) {
+    totalChars += arrayContent[i].length;
+    if (totalChars >= 25) return newContent.join(" ") + "...";
+    newContent.push(arrayContent[i]);
+  }
+  return newContent.join(" ");
+}
+
+type FileType = {
+  uri: string;
+  type: string;
+  name: string;
+};
+
+export async function uploadProfilePic(_id: string, file: FileType) {
+  try {
+    const res = await FileSystem.uploadAsync(
+      `${IMAGE_URL}?filename=${Math.floor(
+        Math.random() * 1_000_000
+      )}&type=external`,
+      file.uri,
+      {
+        uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+        fieldName: "image",
+        mimeType: `image/${file.type}`,
+        headers: { "api-key": IMAGE_API_KEY },
+      }
+    );
+    const path = JSON.parse(res.body).url;
+    await instanceBackend.patch("/user/image", {
+      _id,
+      path,
+    });
+
+    return { path };
+  } catch (err: any) {
+    console.error(err?.message);
+    return { path: null };
+  }
 }

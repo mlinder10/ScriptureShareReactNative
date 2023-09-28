@@ -57,7 +57,7 @@ export default function Read() {
   async function fetchNotes() {
     try {
       const res = await instanceBackend.get(
-        `/note/${version}/${chapter}/${"testid"}`
+        `/note/${version}/${chapter}/${"0cac5b7f-5397-4494-8cb4-d0f017a6081b"}`
       );
       setNotes(res.data.notes);
     } catch (err: any) {

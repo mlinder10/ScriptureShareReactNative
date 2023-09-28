@@ -3,6 +3,7 @@ import React from "react";
 import { RouteProp } from "@react-navigation/native";
 import { StackParamList } from "../config/types";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { formatVerses } from "../config/helpers";
 
 type ReadNoteProps = {
   route: RouteProp<StackParamList, "ReadNote">;
@@ -16,12 +17,7 @@ export default function ReadNote({ route, navigation }: ReadNoteProps) {
     <View>
       <View style={styles.header}>
         <Text style={styles.headerText}>
-          {note.chapter.replace(".", " ") +
-            ":" +
-            note.lineNumbers[0] +
-            (note.lineNumbers.length > 1
-              ? "-" + note.lineNumbers[note.lineNumbers.length - 1]
-              : "")}
+          {formatVerses(note.chapter, note.lineNumbers)}
         </Text>
       </View>
       <View style={styles.txtContainer}>

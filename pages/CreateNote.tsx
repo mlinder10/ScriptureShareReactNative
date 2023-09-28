@@ -13,6 +13,8 @@ import { RouteProp } from "@react-navigation/native";
 import { StackParamList } from "../config/types";
 import { instanceBackend } from "../config/constants";
 import { BookContext } from "../contexts/BookProvider";
+import { AuthContext } from "../contexts/AuthProvider";
+import { formatVerses } from "../config/helpers";
 
 type CreateNoteProps = {
   route: RouteProp<StackParamList, "CreateNote">;
@@ -21,15 +23,17 @@ type CreateNoteProps = {
 
 export default function CreateNote({ route, navigation }: CreateNoteProps) {
   const { version, book, chapter } = useContext(BookContext);
+  const { user } = useContext(AuthContext);
   const { lines } = route.params;
   const [input, setInput] = useState<string>("");
 
   async function handlePostNote() {
+    if (user === null) return;
     try {
       await instanceBackend.post("/note", {
         lines: lines.text,
         lineNumbers: lines.numbers,
-        userId: "testid",
+        userId: user._id,
         version,
         book,
         chapter,
@@ -46,13 +50,7 @@ export default function CreateNote({ route, navigation }: CreateNoteProps) {
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
         <Text style={styles.headerText}>
-          {chapter.replace(".", " ") +
-            ":" +
-            (lines.numbers.length === 1
-              ? lines.numbers[0]
-              : lines.numbers[0] +
-                "-" +
-                lines.numbers[lines.numbers.length - 1])}
+          {formatVerses(chapter, lines.numbers)}
         </Text>
       </View>
       <ScrollView

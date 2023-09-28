@@ -17,6 +17,7 @@ import ChangeVersion from "./pages/ChangeVersion";
 import ChangeChapter from "./pages/ChangeChapter";
 import ReadNote from "./pages/ReadNote";
 import CreateNote from "./pages/CreateNote";
+import User from "./pages/User";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -85,13 +86,17 @@ export default function App() {
               />
               <Stack.Screen
                 name="CreateNote"
-                initialParams={undefined}
                 component={CreateNote}
                 options={{
                   presentation: "modal",
                   animation: "slide_from_bottom",
                   headerShown: false,
                 }}
+              />
+              <Stack.Screen
+                name="User"
+                component={User}
+                options={{ headerShown: false }}
               />
             </Stack.Navigator>
             <BottomNav />
