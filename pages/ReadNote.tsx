@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import { RouteProp } from "@react-navigation/native";
 import { StackParamList } from "../config/types";
@@ -20,15 +20,19 @@ export default function ReadNote({ route, navigation }: ReadNoteProps) {
     for (const friend of friends) {
       if (friend._id === note.userId) return friend.username;
     }
-    return "Unknown"
+    return "Unknown";
   }
 
   return (
     <View>
       <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.closeBtnText}>Close</Text>
+        </TouchableOpacity>
         <Text style={styles.headerText}>
           {formatVerses(note.chapter, note.lineNumbers)}
         </Text>
+        <Text style={styles.username}>{getUsername()}</Text>
       </View>
       <View style={styles.txtContainer}>
         <View style={styles.verseContainer}>
@@ -44,7 +48,6 @@ export default function ReadNote({ route, navigation }: ReadNoteProps) {
         <View style={styles.commentaryContainer}>
           <Text style={styles.commentaryTitle}>Commentary</Text>
           <Text>{note.content}</Text>
-          <Text style={{alignSelf: "flex-end", paddingRight: 20}}>{" - " + getUsername()}</Text>
         </View>
       </View>
     </View>
@@ -56,11 +59,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingVertical: 20,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  closeBtnText: {
+    fontSize: 18,
+    color: "#555",
   },
   headerText: {
     fontWeight: "bold",
     fontSize: 16,
+  },
+  username: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
   txtContainer: {
     padding: 20,

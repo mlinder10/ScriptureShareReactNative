@@ -4,26 +4,28 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
   Pressable,
   FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
 import { BibleType, NoteType, UserType } from "../config/types";
 import { instanceBackend } from "../config/constants";
 import { NavContext } from "../contexts/navigation";
-import {
-  formatVerses,
-  getBibleVersions,
-  shortenContent,
-} from "../config/helpers";
+import { filterAbb, getBibleVersions } from "../config/helpers";
 import { AuthContext } from "../contexts/AuthProvider";
 import ProfileImage from "../components/ProfileImage";
 import { BookContext } from "../contexts/BookProvider";
+import CondensedNote from "../components/CondensedNote";
+
+const notesLimit = 10;
 
 export default function Home() {
   const [friendsNotes, setFriendsNotes] = useState<NoteType[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
   const [bibles, setBibles] = useState<BibleType[]>([]);
+  const [fetchingNotes, setFetchingNotes] = useState<boolean>(false);
+  const [offset, setOffset] = useState<number>(0);
   const { navigate } = useContext(NavContext);
   const { user } = useContext(AuthContext);
   const { setBookData, chapter } = useContext(BookContext);
@@ -31,7 +33,9 @@ export default function Home() {
   async function fetchFriendsNotes() {
     if (user === null) return;
     try {
-      const res = await instanceBackend.get(`/note/${user._id}`);
+      const res = await instanceBackend.get(
+        `/note/friends/${user._id}?limit=${notesLimit}`
+      );
       setFriendsNotes(res.data.notes);
     } catch (err: any) {
       console.error(err?.message);
@@ -57,9 +61,17 @@ export default function Home() {
     }
   }
 
-  function handleSelectBible(version: string) {
+  function handleSelectBible(version: BibleType) {
     setBookData(version, chapter);
     navigate("Read");
+  }
+
+  function updateOffset(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    if (
+      event.nativeEvent.contentSize.width ===
+      event.nativeEvent.contentOffset.x + Dimensions.get("window").width
+    )
+      setOffset(offset + 1);
   }
 
   useEffect(() => {
@@ -68,91 +80,74 @@ export default function Home() {
     fetchBibles();
   }, [user]);
 
+  useEffect(() => {
+    async function fetchMoreNotes() {
+      if (user === null || fetchingNotes) return;
+      try {
+        setFetchingNotes(true);
+        const res = await instanceBackend.get(
+          `/note/friends/${user._id}?limit=${notesLimit}&offset=${
+            offset * notesLimit
+          }`
+        );
+        setFriendsNotes([...friendsNotes, ...res.data.notes]);
+        setFetchingNotes(false);
+      } catch (err: any) {
+        console.error(err?.message);
+        setFetchingNotes(false);
+      }
+    }
+
+    fetchMoreNotes();
+  }, [offset]);
+
   return (
     <View style={styles.page}>
       <View style={styles.row}>
         <Text style={styles.rowTitle}>Friends' Notes</Text>
-        {friendsNotes.length === 0 ? (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: 140,
-            }}
-          >
-            <Text style={{ textAlign: "center", width: 150 }}>
-              Add friends to get new insights into scripture
-            </Text>
-          </View>
-        ) : (
-          <FlatList
-            data={friendsNotes}
-            contentContainerStyle={styles.scrollView}
-            horizontal
-            renderItem={({ item }) => (
-              <View style={styles.note} key={item._id}>
-                <Text style={styles.verses}>
-                  {formatVerses(item.chapter, item.lineNumbers)}
-                </Text>
-                <Text style={{ textAlign: "center" }}>
-                  {shortenContent(item.content)}
-                </Text>
-                <TouchableOpacity
-                  style={styles.btn}
-                  onPress={() => navigate("ReadNote", { note: item })}
-                >
-                  <Text style={styles.btnText}>Open</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-        )}
+        <FlatList
+          onScroll={updateOffset}
+          scrollEventThrottle={50}
+          data={friendsNotes}
+          contentContainerStyle={styles.flatList}
+          ListEmptyComponent={EmptyFriendsNotes}
+          horizontal
+          renderItem={({ item }) => <CondensedNote note={item} />}
+        />
       </View>
       <View style={styles.row}>
         <Text style={styles.rowTitle}>Find New Friends</Text>
-        {users.length === 0 ? (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: 120,
-            }}
-          >
-            <Text style={{ textAlign: "center", width: 150 }}>
-              You're friends with everyone on the app!
-            </Text>
-          </View>
-        ) : (
-          <FlatList
-            data={users}
-            contentContainerStyle={[styles.scrollView, { height: 120 }]}
-            horizontal
-            renderItem={({ item }) => (
-              <Pressable
-                style={styles.user}
-                key={item._id}
-                onPress={() => navigate("User", { user: item })}
-              >
-                <ProfileImage uri={item.profileImage} />
-                <Text>{item.username}</Text>
-              </Pressable>
-            )}
-          />
-        )}
+
+        <FlatList
+          data={users}
+          contentContainerStyle={[styles.flatList, { height: 120 }]}
+          horizontal
+          ListEmptyComponent={EmptyNewFriends}
+          renderItem={({ item }) => (
+            <Pressable
+              style={styles.user}
+              key={item._id}
+              onPress={() => navigate("User", { user: item })}
+            >
+              <ProfileImage uri={item.profileImage} />
+              <Text>{item.username}</Text>
+            </Pressable>
+          )}
+        />
       </View>
       <View style={[styles.row, { borderBottomWidth: 0 }]}>
         <Text style={styles.rowTitle}>Featured Bible Versions</Text>
         <FlatList
-          contentContainerStyle={[styles.scrollView, {}]}
+          contentContainerStyle={[styles.flatList, {}]}
           horizontal
           data={bibles}
           renderItem={({ item }) => (
             <View style={styles.bible}>
-              <Text style={styles.abb}>{item.abbreviation}</Text>
+              <Text style={styles.abb}>{filterAbb(item.abbreviation)}</Text>
               <Text style={styles.bibleName}>{item.name}</Text>
               <Pressable
                 style={styles.btn}
-                onPress={() => handleSelectBible(item.id)}
+                onPress={() => handleSelectBible(item)}
               >
                 <Text style={styles.btnText}>Read</Text>
               </Pressable>
@@ -160,6 +155,36 @@ export default function Home() {
           )}
         />
       </View>
+    </View>
+  );
+}
+
+function EmptyFriendsNotes() {
+  return (
+    <View
+      style={{
+        alignSelf: "center",
+        paddingHorizontal: (Dimensions.get("window").width - 190) / 2,
+      }}
+    >
+      <Text style={{ textAlign: "center", width: 150 }}>
+        Add friends to get new insights into scripture
+      </Text>
+    </View>
+  );
+}
+
+function EmptyNewFriends() {
+  return (
+    <View
+      style={{
+        alignSelf: "center",
+        paddingHorizontal: (Dimensions.get("window").width - 190) / 2,
+      }}
+    >
+      <Text style={{ textAlign: "center", width: 150 }}>
+        You're friends with everyone on the app!
+      </Text>
     </View>
   );
 }
@@ -176,23 +201,10 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingLeft: 20,
   },
-  scrollView: {
+  flatList: {
     height: 160,
     gap: 20,
     padding: 20,
-  },
-  note: {
-    borderColor: "#888",
-    borderWidth: 1,
-    borderRadius: 10,
-    width: (Dimensions.get("window").width - 40) / 2 - 10,
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  verses: {
-    fontWeight: "bold",
   },
   btn: {
     backgroundColor: "#08f",
@@ -209,13 +221,13 @@ const styles = StyleSheet.create({
   },
   bible: {
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   abb: {
     fontWeight: "bold",
   },
   bibleName: {
     maxWidth: 160,
-    textAlign: "center"
+    textAlign: "center",
   },
 });

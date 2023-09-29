@@ -18,6 +18,7 @@ import ChangeChapter from "./pages/ChangeChapter";
 import ReadNote from "./pages/ReadNote";
 import CreateNote from "./pages/CreateNote";
 import User from "./pages/User";
+import Settings from "./pages/Settings";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -29,7 +30,10 @@ export default function App() {
           <BookProvider>
             <Stack.Navigator
               initialRouteName="Login"
-              screenOptions={{ animation: "none" }}
+              screenOptions={{
+                animation: "none",
+                headerTitleStyle: { fontSize: 18, fontWeight: "600" },
+              }}
             >
               <Stack.Screen
                 name="Login"
@@ -56,7 +60,16 @@ export default function App() {
                   headerShown: false,
                 }}
               />
-              <Stack.Screen name="Account" component={Account} />
+              <Stack.Screen
+                name="Account"
+                component={Account}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Settings"
+                component={Settings}
+                options={{ animation: "simple_push" }}
+              />
               <Stack.Screen
                 name="ChangeVersion"
                 component={ChangeVersion}

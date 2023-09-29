@@ -16,6 +16,12 @@ export type VerseType = z.infer<typeof VerseSchema>;
 
 export type BibleType = z.infer<typeof BiblesSchema>;
 
+export type BookInfo = {
+  version: BibleType;
+  book: string;
+  chapter: string;
+};
+
 export type BookContextType = {
   version: BibleType;
   book: string;
@@ -75,6 +81,7 @@ export type StackParamList = {
   ReadNote: { note: NoteType };
   CreateNote: { lines: LineType };
   User: { user: UserType };
+  Settings: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<StackParamList>;

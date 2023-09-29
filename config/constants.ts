@@ -17,6 +17,12 @@ export const DEFAULT_VERSION = {
 export const DEFAULT_BOOK = "GEN";
 export const DEFAULT_CHAPTER = "GEN.1";
 
+export const DEFAULT_BOOK_INFO = {
+  version: DEFAULT_VERSION,
+  book: DEFAULT_BOOK,
+  chapter: DEFAULT_CHAPTER,
+};
+
 export const instanceBackend = axios.create({
   headers: { "api-key": API_KEY },
   baseURL: SERVER,

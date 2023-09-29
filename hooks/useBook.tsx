@@ -2,20 +2,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { BooksSchema, LocalStorageSchema } from "../config/schemas";
 import {
-  DEFAULT_BOOK,
-  DEFAULT_CHAPTER,
+  DEFAULT_BOOK_INFO,
   DEFAULT_CONTENT,
-  DEFAULT_VERSION,
   instanceBackend,
 } from "../config/constants";
 import { z } from "zod";
 import { getBooks, getChapter } from "../config/helpers";
-import { BibleType, ContentType, NoteType, UserType } from "../config/types";
+import {
+  BibleType,
+  BookInfo,
+  ContentType,
+  NoteType,
+  UserType,
+} from "../config/types";
 
 export default function useBook() {
-  const [version, setVersion] = useState<BibleType>(DEFAULT_VERSION);
-  const [book, setBook] = useState<string>(DEFAULT_BOOK);
-  const [chapter, setChapter] = useState<string>(DEFAULT_CHAPTER);
+  const [bookInfo, setBookInfo] = useState<BookInfo>(DEFAULT_BOOK_INFO);
   const [content, setContent] = useState<ContentType>(DEFAULT_CONTENT);
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
@@ -28,9 +30,11 @@ export default function useBook() {
       const res = await AsyncStorage.getItem("SSData");
       if (res === null) return;
       const data = LocalStorageSchema.parse(JSON.parse(res));
-      setVersion(data.version);
-      setBook(data.book);
-      setChapter(data.chapter);
+      setBookInfo({
+        version: data.version,
+        book: data.book,
+        chapter: data.chapter,
+      });
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -39,9 +43,7 @@ export default function useBook() {
   async function setBookData(version: BibleType, chapter: string) {
     try {
       const book = chapter.slice(0, 3);
-      setVersion(version);
-      setBook(book);
-      setChapter(chapter);
+      setBookInfo({ version, book, chapter });
       await AsyncStorage.setItem(
         "SSData",
         JSON.stringify({ version, book, chapter })
@@ -62,13 +64,13 @@ export default function useBook() {
         lines: text,
         lineNumbers: numbers,
         userId: user._id,
-        version,
-        book,
-        chapter,
+        version: bookInfo.version,
+        book: bookInfo.book,
+        chapter: bookInfo.chapter,
         content: input,
       });
       setSelectedLines([]);
-      fetchNotes()
+      fetchNotes();
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -105,7 +107,7 @@ export default function useBook() {
   async function fetchContent() {
     setContent({ lines: [], next: content.next, previous: content.previous });
     try {
-      const res = await getChapter(version.id, chapter);
+      const res = await getChapter(bookInfo.version.id, bookInfo.chapter);
       if (res === null) return;
       setContent({
         lines: res.content,
@@ -120,7 +122,9 @@ export default function useBook() {
   async function fetchNotes() {
     try {
       const res = await instanceBackend.get(
-        `/note/${version}/${chapter}/${"0cac5b7f-5397-4494-8cb4-d0f017a6081b"}`
+        `/note/${bookInfo.version.id}/${
+          bookInfo.chapter
+        }/${"0cac5b7f-5397-4494-8cb4-d0f017a6081b"}`
       );
       setNotes(res.data.notes);
     } catch (err: any) {
@@ -131,7 +135,7 @@ export default function useBook() {
   useEffect(() => {
     async function fetchBooks() {
       try {
-        const res = await getBooks(version.id);
+        const res = await getBooks(bookInfo.version.id);
         if (res === null) return;
         setBookOptions(res);
       } catch (err: any) {
@@ -140,21 +144,21 @@ export default function useBook() {
     }
 
     fetchBooks();
-  }, [version]);
+  }, [bookInfo.version]);
 
   useEffect(() => {
     fetchContent();
     fetchNotes();
-  }, [version, chapter]);
+  }, [bookInfo]);
 
   useEffect(() => {
     getLocalData();
   }, []);
 
   return {
-    version,
-    book,
-    chapter,
+    version: bookInfo.version,
+    book: bookInfo.book,
+    chapter: bookInfo.chapter,
     bookOptions,
     getLocalData,
     setBookData,

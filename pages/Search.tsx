@@ -36,7 +36,7 @@ export default function Search() {
       try {
         let newVerses = [];
         const res = await instanceAPI.get(
-          `bibles/${version}/search?query=${encodeURIComponent(
+          `bibles/${version.id}/search?query=${encodeURIComponent(
             search
           )}&sort=relevance`
         );
