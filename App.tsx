@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Read from "./pages/Read";
-import { NoteType, StackParamList } from "./config/types";
+import { StackParamList } from "./config/types";
 import BookProvider from "./contexts/BookProvider";
 import { navigationRef } from "./contexts/navigation";
 import BottomNav from "./components/BottomNav";

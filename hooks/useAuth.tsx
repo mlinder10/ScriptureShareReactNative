@@ -5,19 +5,19 @@ import { instanceBackend } from "../config/constants";
 
 export default function useAuth() {
   const [user, setUser] = useState<UserType | null>(null);
-
-  useEffect(() => {
-    loginWithToken();
-  }, []);
+  const [friends, setFriends] = useState<UserType[]>([]);
 
   async function loginWithToken() {
     try {
       const user = await AsyncStorage.getItem("SSUser");
-      const token = JSON.parse(user || "undefined").token._id;
-      const res = await instanceBackend.get(`/auth/${token}`);
-      updateUser(res.data.user)
+      if (user === null) return;
+      const jsonUser = JSON.parse(user);
+      if (jsonUser === null) return;
+      setUser(jsonUser);
+      await instanceBackend.get(`/auth/${jsonUser.token._id}`);
     } catch (err: any) {
       console.error(err?.message);
+      setUser(null);
     }
   }
 
@@ -29,7 +29,7 @@ export default function useAuth() {
       const res = await instanceBackend.get(
         `/auth?username=${username}&password=${password}`
       );
-      updateUser(res.data.user)
+      updateUser(res.data.user);
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -43,7 +43,7 @@ export default function useAuth() {
     if (password !== confirmPassword) return;
     try {
       const res = await instanceBackend.post("/auth", { username, password });
-      updateUser(res.data.user)
+      updateUser(res.data.user);
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -57,10 +57,6 @@ export default function useAuth() {
     }
   }
 
-  function logout() {
-    updateUser(null)
-  }
-
   async function updateUser(newUser: UserType | null) {
     try {
       setUser(newUser);
@@ -70,8 +66,31 @@ export default function useAuth() {
     }
   }
 
+  async function fetchFriends() {
+    if (user === null) return;
+    try {
+      const res = await instanceBackend.get(`/user/friends/${user._id}`);
+      setFriends(res.data.friends);
+    } catch (err: any) {
+      console.error(err?.message);
+    }
+  }
+
+  function logout() {
+    updateUser(null);
+  }
+
+  useEffect(() => {
+    fetchFriends()
+  }, [user]);
+
+  useEffect(() => {
+    loginWithToken();
+  }, []);
+
   return {
     user,
+    friends,
     loginWithUsernameAndPassword,
     register,
     logout,

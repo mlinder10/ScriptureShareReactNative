@@ -10,8 +10,9 @@ import { BookContext } from "../contexts/BookProvider";
 import { useContext, useEffect, useState } from "react";
 import { BiblesSchema } from "../config/schemas";
 import { z } from "zod";
-import { getBibleVersions } from "../config/helpers";
+import { filterAbb, getBibleVersions } from "../config/helpers";
 import { useNavigation } from "@react-navigation/native";
+import { BibleType } from "../config/types";
 
 export default function ChangeVersion() {
   const { version, chapter, setBookData } = useContext(BookContext);
@@ -27,12 +28,7 @@ export default function ChangeVersion() {
     }
   }
 
-  function filterAbb(abbreviation: string) {
-    if (abbreviation.startsWith("eng")) return abbreviation.slice(3);
-    return abbreviation;
-  }
-
-  function handleVersionChange(version: string) {
+  function handleVersionChange(version: BibleType) {
     setBookData(version, chapter);
     navigation.goBack();
   }
@@ -47,7 +43,7 @@ export default function ChangeVersion() {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.cancel}>Cancel</Text>
         </TouchableOpacity>
-        <Text style={styles.headerVersion}>{version}</Text>
+        <Text style={styles.headerVersion}>{version.name}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
         {versions.length === 0 && <ActivityIndicator />}
@@ -55,7 +51,7 @@ export default function ChangeVersion() {
           <TouchableOpacity
             style={styles.version}
             key={v.id}
-            onPress={() => handleVersionChange(v.id)}
+            onPress={() => handleVersionChange(v)}
           >
             <Text style={styles.abb}>{filterAbb(v.abbreviation)}</Text>
             <Text style={styles.name}>{v.name}</Text>

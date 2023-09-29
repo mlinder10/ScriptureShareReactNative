@@ -1,5 +1,5 @@
 import { View, Text, Button } from "react-native";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import * as ImagePicker from "expo-image-picker";
 import { uploadProfilePic } from "../config/helpers";

@@ -22,28 +22,16 @@ type CreateNoteProps = {
 };
 
 export default function CreateNote({ route, navigation }: CreateNoteProps) {
-  const { version, book, chapter } = useContext(BookContext);
+  const { chapter, postNote } = useContext(BookContext);
   const { user } = useContext(AuthContext);
   const { lines } = route.params;
   const [input, setInput] = useState<string>("");
 
   async function handlePostNote() {
     if (user === null) return;
-    try {
-      await instanceBackend.post("/note", {
-        lines: lines.text,
-        lineNumbers: lines.numbers,
-        userId: user._id,
-        version,
-        book,
-        chapter,
-        content: input,
-      });
-      setInput("");
-      navigation.goBack();
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    await postNote(user, input, lines.text, lines.numbers);
+    setInput("");
+    navigation.goBack();
   }
 
   return (

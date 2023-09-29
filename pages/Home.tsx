@@ -2,7 +2,6 @@ import { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
-  ScrollView,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
@@ -42,7 +41,7 @@ export default function Home() {
   async function fetchNewFriends() {
     if (user === null) return;
     try {
-      const res = await instanceBackend.get(`/user/${user._id}`);
+      const res = await instanceBackend.get(`/user/nfriends/${user._id}`);
       setUsers(res.data.users);
     } catch (err: any) {
       console.error(err?.message);

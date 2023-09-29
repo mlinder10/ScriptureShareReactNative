@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { BookContext } from "../contexts/BookProvider";
 import { useContext } from "react";
 import { NavContext } from "../contexts/navigation";
+import { filterAbb } from "../config/helpers";
 
 type LineType = {
   text: string[];
@@ -23,7 +24,7 @@ const scrollBtnStyles = {
 };
 
 export default function ReadHeader({ scroll, lines }: ReadHeaderProps) {
-  const { chapter } = useContext(BookContext);
+  const { chapter, version } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
 
   return (
@@ -34,7 +35,7 @@ export default function ReadHeader({ scroll, lines }: ReadHeaderProps) {
           onPress={() => navigate("ChangeVersion")}
         >
           <Text style={[styles.text, scroll ? scrollBtnStyles : null]}>
-            Version
+            {filterAbb(version.abbreviation)}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

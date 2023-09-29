@@ -1,4 +1,10 @@
-import { BiblesSchema, BooksSchema, NoteSchema, UserSchema, VerseSchema } from "./schemas";
+import {
+  BiblesSchema,
+  BooksSchema,
+  NoteSchema,
+  UserSchema,
+  VerseSchema,
+} from "./schemas";
 import { z } from "zod";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -8,19 +14,30 @@ export type NoteType = z.infer<typeof NoteSchema>;
 
 export type VerseType = z.infer<typeof VerseSchema>;
 
-export type BibleType = z.infer<typeof BiblesSchema>
+export type BibleType = z.infer<typeof BiblesSchema>;
 
 export type BookContextType = {
-  version: string;
+  version: BibleType;
   book: string;
   chapter: string;
   bookOptions: z.infer<typeof BooksSchema>[];
+  content: ContentType;
+  notes: NoteType[];
+  selectedLines: number[];
+  handleSelectLine(number: number): void;
   getLocalData: () => Promise<void>;
-  setBookData: (version: string, chapter: string) => Promise<void>;
+  setBookData: (version: BibleType, chapter: string) => Promise<void>;
+  postNote: (
+    user: UserType,
+    input: string,
+    text: string[],
+    numbers: number[]
+  ) => Promise<void>;
 };
 
 export type AuthContextType = {
   user: UserType | null;
+  friends: UserType[];
   loginWithUsernameAndPassword: (
     username: string,
     password: string
@@ -38,6 +55,12 @@ export type AuthContextType = {
 type LineType = {
   text: string[];
   numbers: number[];
+};
+
+export type ContentType = {
+  lines: string[];
+  next: string;
+  previous: string;
 };
 
 export type StackParamList = {

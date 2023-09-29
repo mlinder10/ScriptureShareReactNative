@@ -10,88 +10,18 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { createRef, useContext, useEffect, useState } from "react";
-import { getChapter, getLineNum } from "../config/helpers";
+import { getLineNum } from "../config/helpers";
 import { Ionicons } from "@expo/vector-icons";
 import { BookContext } from "../contexts/BookProvider";
-import { instanceBackend } from "../config/constants";
-import { NoteType } from "../config/types";
 import ReadHeader from "../components/ReadHeader";
 import Line from "../components/Line";
 
-type ContentType = {
-  lines: string[];
-  next: string;
-  previous: string;
-};
-
-const defaultContent = {
-  lines: [],
-  next: "",
-  previous: "",
-};
-
 export default function Read() {
-  const { version, book, chapter, setBookData } = useContext(BookContext);
-  const [content, setContent] = useState<ContentType>(defaultContent);
-  const [notes, setNotes] = useState<NoteType[]>([]);
-  const [selectedLines, setSelectedLines] = useState<number[]>([]);
+  const { version, book, chapter, setBookData, content, notes, selectedLines, handleSelectLine } =
+    useContext(BookContext);
   const [scrolling, setScrolling] = useState<boolean>(false);
   const [prevScroll, setPrevScroll] = useState<number>(0);
   const scrollRef = createRef<ScrollView>();
-
-  async function fetchLines() {
-    setContent({ lines: [], next: content.next, previous: content.previous });
-    try {
-      const res = await getChapter(version, chapter);
-      if (res === null) return;
-      setContent({
-        lines: res.content,
-        next: res.next,
-        previous: res.previous,
-      });
-    } catch (err: any) {
-      console.error(err?.message);
-    }
-  }
-
-  async function fetchNotes() {
-    try {
-      const res = await instanceBackend.get(
-        `/note/${version}/${chapter}/${"0cac5b7f-5397-4494-8cb4-d0f017a6081b"}`
-      );
-      setNotes(res.data.notes);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
-  }
-
-  function handleSelectLine(number: number) {
-    if (selectedLines.length === 0) {
-      setSelectedLines([number]);
-      return;
-    }
-
-    const min = selectedLines[0];
-    const max = selectedLines[selectedLines.length - 1];
-    if (!selectedLines.includes(number)) {
-      if (number < min) {
-        let lineNumbers = [];
-        for (let i = number; i <= max; i++) {
-          lineNumbers.push(i);
-        }
-        setSelectedLines(lineNumbers);
-        return;
-      }
-      let lineNumbers = [];
-      for (let i = min; i <= number; i++) {
-        lineNumbers.push(i);
-      }
-      setSelectedLines(lineNumbers);
-      return;
-    }
-
-    setSelectedLines([]);
-  }
 
   function getNotes(lineNum: number) {
     let validNotes = [];
@@ -117,14 +47,11 @@ export default function Read() {
   }
 
   function handlePageChange(direction: "next" | "last") {
-    setSelectedLines([]);
     if (direction === "next") setBookData(version, content.next);
     else setBookData(version, content.previous);
   }
 
   useEffect(() => {
-    fetchNotes();
-    fetchLines();
     scrollRef.current?.scrollTo({ y: 0, animated: false });
   }, [version, book, chapter]);
 

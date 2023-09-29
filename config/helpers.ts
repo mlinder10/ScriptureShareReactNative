@@ -116,3 +116,8 @@ export async function uploadProfilePic(_id: string, file: FileType) {
     return { path: null };
   }
 }
+
+export function filterAbb(abbreviation: string) {
+  if (abbreviation.startsWith("eng")) return abbreviation.slice(3);
+  return abbreviation;
+}

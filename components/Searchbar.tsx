@@ -3,13 +3,12 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Dimensions,
   Pressable,
   Keyboard,
   StyleProp,
   ViewStyle,
 } from "react-native";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 type SearchBarProps = {

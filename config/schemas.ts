@@ -64,7 +64,7 @@ export const VerseSchema = z.object({
 });
 
 export const LocalStorageSchema = z.object({
-  version: z.string(),
+  version: BiblesSchema,
   book: z.string(),
   chapter: z.string(),
 });

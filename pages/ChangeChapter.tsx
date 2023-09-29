@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BookContext } from "../contexts/BookProvider";
 import { ChaptersSchema } from "../config/schemas";
 import { z } from "zod";
@@ -25,7 +25,7 @@ export default function ChangeChapter() {
     setChapterOptions([]);
     if (selectedBook === null) return;
     try {
-      const res = await getChapters(version, selectedBook);
+      const res = await getChapters(version.id, selectedBook);
       if (res === null) return;
       setChapterOptions(res);
     } catch (err: any) {
@@ -66,14 +66,21 @@ export default function ChangeChapter() {
               <Text style={styles.name}>{b.name}</Text>
             </TouchableOpacity>
             {selectedBook === b.id && (
-              <View style={[styles.chapterContainer, {paddingVertical: chapterOptions.length !== 0 ? 20 : 0}]}>
+              <View
+                style={[
+                  styles.chapterContainer,
+                  { paddingVertical: chapterOptions.length !== 0 ? 20 : 0 },
+                ]}
+              >
                 {chapterOptions.map((c) => (
                   <TouchableOpacity
                     style={styles.chapter}
                     key={c.id}
                     onPress={() => handleChapterChange(c.id)}
                   >
-                    <Text style={{textTransform: "capitalize"}}>{c.number}</Text>
+                    <Text style={{ textTransform: "capitalize" }}>
+                      {c.number}
+                    </Text>
                   </TouchableOpacity>
                 ))}
               </View>
