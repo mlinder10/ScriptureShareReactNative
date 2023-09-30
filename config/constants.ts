@@ -81,7 +81,7 @@ export const colors =
         text: "#000",
         border: "#ccc",
         borderSecondary: "#ddd",
-        cancel: "#555"
+        cancel: "#555",
       }
     : {
         primary: "#008000",
@@ -90,5 +90,5 @@ export const colors =
         text: "#fff",
         border: "#333",
         borderSecondary: "#222",
-        cancel: "#999"
+        cancel: "#999",
       };

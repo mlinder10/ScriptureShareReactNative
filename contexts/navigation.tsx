@@ -9,21 +9,16 @@ import {
   useEffect,
   useState,
 } from "react";
-import { StackParamList } from "../config/types";
+import { NavContextType, StackParamList } from "../config/types";
 
 export const navigationRef =
   createRef<NavigationContainerRef<StackParamList>>();
-
-type NavContextType = {
-  route: keyof StackParamList;
-  replace: (screen: keyof StackParamList, params?: any) => void;
-  navigate: (screen: keyof StackParamList, params?: any) => void;
-};
 
 export const NavContext = createContext<NavContextType>({
   route: "Signup",
   replace: () => {},
   navigate: () => {},
+  fullReplace: () => {},
 });
 
 type NavigationProviderProps = {
@@ -64,12 +59,23 @@ export default function NavigationProvider({
     });
   }
 
+  function fullReplace(screen: keyof StackParamList, params: any = undefined) {
+    navigationRef.current?.navigate(screen, params);
+    navigationRef.current?.dispatch((state) => {
+      return CommonActions.reset({
+        ...state,
+        routes: [state.routes[state.routes.length - 1]],
+        index: 0,
+      });
+    });
+  }
+
   function navigate(screen: keyof StackParamList, params: any = undefined) {
     navigationRef.current?.navigate(screen, params);
   }
 
   return (
-    <NavContext.Provider value={{ route, replace, navigate }}>
+    <NavContext.Provider value={{ route, replace, navigate, fullReplace }}>
       {children}
     </NavContext.Provider>
   );

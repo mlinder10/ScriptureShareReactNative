@@ -18,7 +18,7 @@ export default function CondensedUser({ user }: CondensedUserProps) {
       key={user._id}
       onPress={() => navigate("User", { user: user })}
     >
-      <ProfileImage uri={user.profileImage} />
+      <ProfileImage user={user} />
       <Text style={{ color: colors.text }}>{user.username}</Text>
     </Pressable>
   );

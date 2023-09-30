@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
@@ -73,7 +74,7 @@ export default function Account() {
       <View style={styles.header}>
         <View style={styles.profileContainer}>
           <Pressable onPress={openImagePicker}>
-            <ProfileImage size={50} uri={user?.profileImage ?? ""} />
+            <ProfileImage size={50} user={user} />
           </Pressable>
           <Text style={styles.username}>{user?.username}</Text>
         </View>
@@ -85,6 +86,7 @@ export default function Account() {
         <View style={styles.row}>
           <Text style={styles.rowTitle}>Your Notes</Text>
           <FlatList
+            ListEmptyComponent={NotesEmpty}
             contentContainerStyle={styles.flatListInner}
             data={notes}
             horizontal
@@ -94,6 +96,7 @@ export default function Account() {
         <View style={styles.row}>
           <Text style={styles.rowTitle}>Your Friends</Text>
           <FlatList
+            ListEmptyComponent={FriendsEmpty}
             contentContainerStyle={[styles.flatListInner, { height: 120 }]}
             data={friends}
             horizontal
@@ -120,6 +123,36 @@ export default function Account() {
           </View>
         </View>
       </ScrollView>
+    </View>
+  );
+}
+
+function NotesEmpty() {
+  return (
+    <View
+      style={{
+        alignSelf: "center",
+        paddingHorizontal: (Dimensions.get("window").width - 190) / 2,
+      }}
+    >
+      <Text style={{ textAlign: "center", width: 150, color: colors.text }}>
+        You haven't made any notes yet
+      </Text>
+    </View>
+  );
+}
+
+function FriendsEmpty() {
+  return (
+    <View
+      style={{
+        alignSelf: "center",
+        paddingHorizontal: (Dimensions.get("window").width - 190) / 2,
+      }}
+    >
+      <Text style={{ textAlign: "center", width: 150, color: colors.text }}>
+        You haven't added any friends yet
+      </Text>
     </View>
   );
 }

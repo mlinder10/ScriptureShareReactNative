@@ -11,6 +11,7 @@ export const UserSchema = z.object({
   username: z.string().max(20),
   password: z.string(),
   profileImage: z.string(),
+  color: z.string(),
   friends: z.array(z.string()),
   notes: z.array(z.string()),
   bookmarks: z.array(z.string()),

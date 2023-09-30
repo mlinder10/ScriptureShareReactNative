@@ -58,6 +58,13 @@ export type AuthContextType = {
   setToken: (token: string) => Promise<void>;
 };
 
+export type NavContextType = {
+  route: keyof StackParamList;
+  replace: (screen: keyof StackParamList, params?: any) => void;
+  navigate: (screen: keyof StackParamList, params?: any) => void;
+  fullReplace: (screen: keyof StackParamList, params?: any) => void;
+};
+
 type LineType = {
   text: string[];
   numbers: number[];

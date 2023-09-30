@@ -121,3 +121,26 @@ export function filterAbb(abbreviation: string) {
   if (abbreviation.startsWith("eng")) return abbreviation.slice(3);
   return abbreviation;
 }
+
+const hex: any = {
+  a: 10,
+  b: 11,
+  c: 12,
+  d: 13,
+  e: 14,
+  f: 15,
+};
+
+const mid = (16 * 6) / 2;
+
+export function parseColor(color: string) {
+  color = color.slice(1);
+  let total = 0;
+  for (const key of color) {
+    if (key.match(/\d/)) total += parseInt(key);
+    else total += hex[key];
+  }
+
+  if (total < mid) return "#fff";
+  return "#000";
+}

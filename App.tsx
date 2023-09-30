@@ -116,7 +116,7 @@ export default function App() {
               <Stack.Screen
                 name="User"
                 component={User}
-                options={{ headerShown: false }}
+                options={{ headerShown: false, animation: "simple_push" }}
               />
             </Stack.Navigator>
             <BottomNav />

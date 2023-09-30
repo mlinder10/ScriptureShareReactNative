@@ -6,7 +6,7 @@ import { colors } from "../config/constants";
 
 export default function BottomNav() {
   const [shown, setShown] = useState<boolean>(false);
-  const { route, replace } = useContext(NavContext);
+  const { route, fullReplace } = useContext(NavContext);
 
   useEffect(() => {
     if (route === "Login" || route === "Signup") setShown(false);
@@ -18,25 +18,25 @@ export default function BottomNav() {
   return (
     <>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => replace("Home")}>
+        <TouchableOpacity onPress={() => fullReplace("Home")}>
           <Ionicons
             style={styles.text}
             name={route === "Home" ? "home" : "home-outline"}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => replace("Read")}>
+        <TouchableOpacity onPress={() => fullReplace("Read")}>
           <Ionicons
             style={styles.text}
             name={route === "Read" ? "book" : "book-outline"}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => replace("Search")}>
+        <TouchableOpacity onPress={() => fullReplace("Search")}>
           <Ionicons
             style={styles.text}
             name={route === "Search" ? "md-search" : "md-search-outline"}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => replace("Account")}>
+        <TouchableOpacity onPress={() => fullReplace("Account")}>
           <Ionicons
             style={styles.text}
             name={route === "Account" ? "person" : "person-outline"}
