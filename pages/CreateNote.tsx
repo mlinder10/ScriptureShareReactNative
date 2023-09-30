@@ -11,7 +11,6 @@ import { useContext, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { StackParamList } from "../config/types";
-import { instanceBackend } from "../config/constants";
 import { BookContext } from "../contexts/BookProvider";
 import { AuthContext } from "../contexts/AuthProvider";
 import { formatVerses } from "../config/helpers";

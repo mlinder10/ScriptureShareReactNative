@@ -21,6 +21,7 @@ export default function useBook() {
   const [content, setContent] = useState<ContentType>(DEFAULT_CONTENT);
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
+  const [dataFetched, setDataFetched] = useState<boolean>(false);
   const [bookOptions, setBookOptions] = useState<z.infer<typeof BooksSchema>[]>(
     []
   );
@@ -64,7 +65,7 @@ export default function useBook() {
         lines: text,
         lineNumbers: numbers,
         userId: user._id,
-        version: bookInfo.version,
+        version: bookInfo.version.id,
         book: bookInfo.book,
         chapter: bookInfo.chapter,
         content: input,
@@ -147,11 +148,13 @@ export default function useBook() {
   }, [bookInfo.version]);
 
   useEffect(() => {
+    if (!dataFetched) return;
     fetchContent();
     fetchNotes();
   }, [bookInfo]);
 
   useEffect(() => {
+    setDataFetched(true);
     getLocalData();
   }, []);
 

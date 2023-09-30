@@ -17,6 +17,7 @@ import { AuthContext } from "../contexts/AuthProvider";
 import ProfileImage from "../components/ProfileImage";
 import { BookContext } from "../contexts/BookProvider";
 import CondensedNote from "../components/CondensedNote";
+import CondensedUser from "../components/CondensedUser";
 
 const notesLimit = 10;
 
@@ -117,22 +118,12 @@ export default function Home() {
       </View>
       <View style={styles.row}>
         <Text style={styles.rowTitle}>Find New Friends</Text>
-
         <FlatList
           data={users}
           contentContainerStyle={[styles.flatList, { height: 120 }]}
           horizontal
           ListEmptyComponent={EmptyNewFriends}
-          renderItem={({ item }) => (
-            <Pressable
-              style={styles.user}
-              key={item._id}
-              onPress={() => navigate("User", { user: item })}
-            >
-              <ProfileImage uri={item.profileImage} />
-              <Text>{item.username}</Text>
-            </Pressable>
-          )}
+          renderItem={({ item }) => <CondensedUser user={item} />}
         />
       </View>
       <View style={[styles.row, { borderBottomWidth: 0 }]}>
@@ -214,10 +205,6 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: "#fff",
-  },
-  user: {
-    alignItems: "center",
-    gap: 10,
   },
   bible: {
     alignItems: "center",

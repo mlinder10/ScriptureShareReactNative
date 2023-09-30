@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Dimensions,
+  ScrollView,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
@@ -18,6 +18,7 @@ import { instanceBackend } from "../config/constants";
 import CondensedNote from "../components/CondensedNote";
 import { BookContext } from "../contexts/BookProvider";
 import { NavContext } from "../contexts/navigation";
+import CondensedUser from "../components/CondensedUser";
 
 type FileType = {
   uri: string;
@@ -26,7 +27,7 @@ type FileType = {
 };
 
 export default function Account() {
-  const { user, updateUser } = useContext(AuthContext);
+  const { user, updateUser, friends } = useContext(AuthContext);
   const { version, book, chapter } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
   const [notes, setNotes] = useState<NoteType[]>([]);
@@ -68,7 +69,7 @@ export default function Account() {
   }, []);
 
   return (
-    <View style={styles.page}>
+    <ScrollView style={styles.page}>
       <View style={styles.header}>
         <View style={styles.profileContainer}>
           <Pressable onPress={openImagePicker}>
@@ -80,13 +81,22 @@ export default function Account() {
           <FontAwesome style={styles.settings} name="cog" />
         </TouchableOpacity>
       </View>
-      <View style={styles.notesRow}>
+      <View style={styles.row}>
         <Text style={styles.rowTitle}>Your Notes</Text>
         <FlatList
           contentContainerStyle={styles.flatListInner}
           data={notes}
           horizontal
           renderItem={({ item }) => <CondensedNote note={item} />}
+        />
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.rowTitle}>Your Friends</Text>
+        <FlatList
+          contentContainerStyle={[styles.flatListInner, { height: 120 }]}
+          data={friends}
+          horizontal
+          renderItem={({ item }) => <CondensedUser user={item} />}
         />
       </View>
       <View>
@@ -108,7 +118,7 @@ export default function Account() {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -144,7 +154,7 @@ const styles = StyleSheet.create({
     gap: 20,
     padding: 20,
   },
-  notesRow: {
+  row: {
     borderBottomColor: "#ccc",
     borderBottomWidth: 1,
   },
