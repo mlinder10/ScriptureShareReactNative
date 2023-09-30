@@ -14,6 +14,7 @@ import { StackParamList } from "../config/types";
 import { BookContext } from "../contexts/BookProvider";
 import { AuthContext } from "../contexts/AuthProvider";
 import { formatVerses } from "../config/helpers";
+import { colors } from "../config/constants";
 
 type CreateNoteProps = {
   route: RouteProp<StackParamList, "CreateNote">;
@@ -46,7 +47,9 @@ export default function CreateNote({ route, navigation }: CreateNoteProps) {
       >
         <Text>
           {lines.text.map((l, i) => (
-            <Text key={i}>{l}</Text>
+            <Text style={{ color: colors.text }} key={i}>
+              {l}
+            </Text>
           ))}
         </Text>
       </ScrollView>
@@ -56,6 +59,7 @@ export default function CreateNote({ route, navigation }: CreateNoteProps) {
       >
         <TextInput
           style={styles.textInput}
+          placeholderTextColor={colors.cancel}
           multiline
           placeholder="Your note..."
           keyboardType="ascii-capable"
@@ -72,22 +76,24 @@ export default function CreateNote({ route, navigation }: CreateNoteProps) {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.bg,
     paddingVertical: 20,
     flexDirection: "row",
     justifyContent: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: colors.border,
   },
   headerText: {
     fontWeight: "bold",
     fontSize: 16,
+    color: colors.text,
   },
   txtContainer: {
     flex: 1,
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: colors.border,
+    color: colors.text,
   },
   commentaryContainer: {
     flex: 2,
@@ -96,20 +102,21 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: colors.border,
     height: 200,
     borderRadius: 5,
     padding: 5,
+    color: colors.text,
   },
   postBtn: {
     alignSelf: "center",
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     paddingVertical: 8,
     paddingHorizontal: 25,
     borderRadius: 5,
   },
   postBtnText: {
     fontSize: 16,
-    color: "#fff",
+    color: colors.bg,
   },
 });

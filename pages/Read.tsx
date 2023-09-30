@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { BookContext } from "../contexts/BookProvider";
 import ReadHeader from "../components/ReadHeader";
 import Line from "../components/Line";
+import { colors } from "../config/constants";
 
 export default function Read() {
   const { version, book, chapter, setBookData, content, notes, selectedLines, handleSelectLine } =
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   },
   navBtn: {
     flexDirection: "row",
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     alignItems: "center",
     gap: 10,
     paddingVertical: 5,

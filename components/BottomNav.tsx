@@ -1,13 +1,8 @@
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import {
-  AntDesign,
-  FontAwesome,
-  FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { NavContext } from "../contexts/navigation";
+import { colors } from "../config/constants";
 
 export default function BottomNav() {
   const [shown, setShown] = useState<boolean>(false);
@@ -54,13 +49,15 @@ export default function BottomNav() {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: colors.bg,
     flexDirection: "row",
     justifyContent: "space-evenly",
     paddingVertical: 10,
-    borderTopColor: "#bbb",
+    borderTopColor: colors.border,
     borderTopWidth: 1,
   },
   text: {
     fontSize: 24,
+    color: colors.text,
   },
 });

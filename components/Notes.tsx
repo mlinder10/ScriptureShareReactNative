@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { NoteType } from "../config/types";
 import { NavContext } from "../contexts/navigation";
 import { useContext } from "react";
+import { colors } from "../config/constants";
 
 type NoteProps = {
   notes: NoteType[];
@@ -16,7 +17,7 @@ export default function Notes({ notes }: NoteProps) {
       {notes.length !== 0 &&
         notes.map((note) => (
           <TouchableOpacity key={note._id} onPress={() => navigate("ReadNote", { note })}>
-            <Ionicons name="add" size={16} color="#08f" />
+            <Ionicons name="add" size={16} color={colors.primary} />
           </TouchableOpacity>
         ))}
     </>

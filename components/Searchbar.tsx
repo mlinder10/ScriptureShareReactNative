@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { colors } from "../config/constants";
 
 type SearchBarProps = {
   search: string;
@@ -66,26 +67,28 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     gap: 10,
+    backgroundColor: colors.bg,
   },
   barContainer: {
-    backgroundColor: "#eee",
+    backgroundColor: colors.bgSecondary,
     borderRadius: 10,
     padding: 8,
     gap: 5,
     alignItems: "center",
     flexDirection: "row",
-    flex: 1, // Make the search bar container take up all available horizontal space
+    flex: 1,
   },
   icon: {
-    color: "#bbb",
+    color: colors.cancel,
     fontSize: 18,
   },
   textInput: {
     fontSize: 16,
-    flex: 1, // Make the input take up the remaining space
+    flex: 1,
+    color: colors.text
   },
   cancel: {
     fontSize: 18,
-    color: "#444",
+    color: colors.cancel,
   },
 });

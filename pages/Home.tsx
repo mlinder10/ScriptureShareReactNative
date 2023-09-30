@@ -10,11 +10,10 @@ import {
   NativeScrollEvent,
 } from "react-native";
 import { BibleType, NoteType, UserType } from "../config/types";
-import { instanceBackend } from "../config/constants";
+import { colors, instanceBackend } from "../config/constants";
 import { NavContext } from "../contexts/navigation";
 import { filterAbb, getBibleVersions } from "../config/helpers";
 import { AuthContext } from "../contexts/AuthProvider";
-import ProfileImage from "../components/ProfileImage";
 import { BookContext } from "../contexts/BookProvider";
 import CondensedNote from "../components/CondensedNote";
 import CondensedUser from "../components/CondensedUser";
@@ -158,7 +157,7 @@ function EmptyFriendsNotes() {
         paddingHorizontal: (Dimensions.get("window").width - 190) / 2,
       }}
     >
-      <Text style={{ textAlign: "center", width: 150 }}>
+      <Text style={{ textAlign: "center", width: 150, color: colors.text }}>
         Add friends to get new insights into scripture
       </Text>
     </View>
@@ -173,7 +172,7 @@ function EmptyNewFriends() {
         paddingHorizontal: (Dimensions.get("window").width - 190) / 2,
       }}
     >
-      <Text style={{ textAlign: "center", width: 150 }}>
+      <Text style={{ textAlign: "center", width: 150, color: colors.text }}>
         You're friends with everyone on the app!
       </Text>
     </View>
@@ -184,10 +183,11 @@ const styles = StyleSheet.create({
   page: {},
   row: {
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: colors.border,
   },
   rowTitle: {
     fontWeight: "bold",
+    color: colors.text,
     fontSize: 16,
     paddingTop: 20,
     paddingLeft: 20,
@@ -198,13 +198,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   btn: {
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     borderRadius: 5,
     paddingVertical: 2,
     paddingHorizontal: 5,
   },
   btnText: {
-    color: "#fff",
+    color: colors.bg,
   },
   bible: {
     alignItems: "center",
@@ -212,9 +212,11 @@ const styles = StyleSheet.create({
   },
   abb: {
     fontWeight: "bold",
+    color: colors.text,
   },
   bibleName: {
     maxWidth: 160,
     textAlign: "center",
+    color: colors.text,
   },
 });

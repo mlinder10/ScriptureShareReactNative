@@ -3,6 +3,7 @@ import ProfileImage from "./ProfileImage";
 import { UserType } from "../config/types";
 import { NavContext } from "../contexts/navigation";
 import { useContext } from "react";
+import { colors } from "../config/constants";
 
 type CondensedUserProps = {
   user: UserType;
@@ -18,7 +19,7 @@ export default function CondensedUser({ user }: CondensedUserProps) {
       onPress={() => navigate("User", { user: user })}
     >
       <ProfileImage uri={user.profileImage} />
-      <Text>{user.username}</Text>
+      <Text style={{ color: colors.text }}>{user.username}</Text>
     </Pressable>
   );
 }

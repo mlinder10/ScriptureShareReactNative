@@ -1,6 +1,7 @@
 import { Text } from "react-native";
 import Notes from "./Notes";
 import { NoteType } from "../config/types";
+import { colors } from "../config/constants";
 
 type LineProps = {
   line: string;
@@ -32,7 +33,8 @@ export default function Line({
           textDecorationLine: selectedLines.includes(number)
             ? "underline"
             : "none",
-          textDecorationColor: "#08f",
+          textDecorationColor: colors.primary,
+          color: colors.text
         }}
       >
         {line}

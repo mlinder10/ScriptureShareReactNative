@@ -5,6 +5,7 @@ import { StackParamList } from "../config/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatVerses } from "../config/helpers";
 import { AuthContext } from "../contexts/AuthProvider";
+import { colors } from "../config/constants";
 
 type ReadNoteProps = {
   route: RouteProp<StackParamList, "ReadNote">;
@@ -41,13 +42,15 @@ export default function ReadNote({ route, navigation }: ReadNoteProps) {
           </Text>
           <Text>
             {note.lines.map((l, i) => (
-              <Text key={i}>{l}</Text>
+              <Text style={{ color: colors.text }} key={i}>
+                {l}
+              </Text>
             ))}
           </Text>
         </View>
         <View style={styles.commentaryContainer}>
           <Text style={styles.commentaryTitle}>Commentary</Text>
-          <Text>{note.content}</Text>
+          <Text style={{ color: colors.text }}>{note.content}</Text>
         </View>
       </View>
     </View>
@@ -56,7 +59,7 @@ export default function ReadNote({ route, navigation }: ReadNoteProps) {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.bg,
     paddingVertical: 20,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -64,15 +67,17 @@ const styles = StyleSheet.create({
   },
   closeBtnText: {
     fontSize: 18,
-    color: "#555",
+    color: colors.cancel,
   },
   headerText: {
     fontWeight: "bold",
     fontSize: 16,
+    color: colors.text,
   },
   username: {
     fontSize: 16,
     fontWeight: "bold",
+    color: colors.text,
   },
   txtContainer: {
     padding: 20,
@@ -84,6 +89,7 @@ const styles = StyleSheet.create({
   verseTitle: {
     alignSelf: "center",
     fontWeight: "bold",
+    color: colors.text,
   },
   commentaryContainer: {
     gap: 10,
@@ -91,5 +97,6 @@ const styles = StyleSheet.create({
   commentaryTitle: {
     alignSelf: "center",
     fontWeight: "bold",
+    color: colors.text,
   },
 });

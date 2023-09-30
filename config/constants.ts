@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Appearance } from "react-native";
 
 // export const SERVER = "http://localhost:3001";
 const SERVER = "https://scripture-share-backend.vercel.app";
@@ -8,6 +9,7 @@ const API_KEY = "h4grvubfeo84h23gd";
 export const IMAGE_API_KEY = "ui45e8t34ogfai834";
 const BIBLE_API_KEY = "6470ad3e0c3016155a14bc86781ddb80";
 const DOUAY = "de4e12af7f28f599-02";
+export const LOGO_URI = require("../assets/logo.png");
 
 export const DEFAULT_VERSION = {
   id: "de4e12af7f28f599-02",
@@ -67,3 +69,26 @@ export const AuthProviderDefault = {
   setToken: async () => {},
   getLocalData: async () => null,
 };
+
+const colorScheme = Appearance.getColorScheme();
+
+export const colors =
+  colorScheme === "light"
+    ? {
+        primary: "#008000",
+        bg: "#fff",
+        bgSecondary: "#eee",
+        text: "#000",
+        border: "#ccc",
+        borderSecondary: "#ddd",
+        cancel: "#555"
+      }
+    : {
+        primary: "#008000",
+        bg: "#000",
+        bgSecondary: "#111",
+        text: "#fff",
+        border: "#333",
+        borderSecondary: "#222",
+        cancel: "#999"
+      };

@@ -1,26 +1,24 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "Scripture Share",
     "slug": "scripture-share",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/1016.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/logo.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/text.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/text.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000"
       }
     },
     "web": {

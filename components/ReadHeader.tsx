@@ -3,6 +3,7 @@ import { BookContext } from "../contexts/BookProvider";
 import { useContext } from "react";
 import { NavContext } from "../contexts/navigation";
 import { filterAbb } from "../config/helpers";
+import { colors } from "../config/constants";
 
 type LineType = {
   text: string[];
@@ -62,13 +63,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.bg,
     flexDirection: "row",
     paddingTop: 30,
     paddingBottom: 20,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#bbb",
+    borderBottomColor: colors.border,
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -77,25 +78,25 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   versionBtn: {
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
   },
   bookBtn: {
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
   },
   text: {
-    color: "#fff",
+    color: colors.text,
     fontSize: 18,
   },
   noteText: {
     fontSize: 16,
-    color: "#555",
+    color: colors.cancel,
   },
 });

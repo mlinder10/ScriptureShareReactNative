@@ -2,9 +2,9 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import { BookContext } from "../contexts/BookProvider";
 import { useContext, useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { z } from "zod";
 import { filterAbb, getBibleVersions } from "../config/helpers";
 import { useNavigation } from "@react-navigation/native";
 import { BibleType } from "../config/types";
+import { colors } from "../config/constants";
 
 export default function ChangeVersion() {
   const { version, chapter, setBookData } = useContext(BookContext);
@@ -45,51 +46,57 @@ export default function ChangeVersion() {
         </TouchableOpacity>
         <Text style={styles.headerVersion}>{version.name}</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.scroll}>
-        {versions.length === 0 && <ActivityIndicator />}
-        {versions.map((v) => (
+      <FlatList
+        ListEmptyComponent={<ActivityIndicator />}
+        contentContainerStyle={styles.scroll}
+        data={versions}
+        renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.version}
-            key={v.id}
-            onPress={() => handleVersionChange(v)}
+            key={item.id}
+            onPress={() => handleVersionChange(item)}
           >
-            <Text style={styles.abb}>{filterAbb(v.abbreviation)}</Text>
-            <Text style={styles.name}>{v.name}</Text>
+            <Text style={styles.abb}>{filterAbb(item.abbreviation)}</Text>
+            <Text style={styles.name}>{item.name}</Text>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        )}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.bg,
     padding: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: colors.border,
   },
   cancel: {
     fontSize: 18,
-    color: "#555",
+    color: colors.cancel,
   },
-  headerVersion: {},
+  headerVersion: {
+    color: colors.text,
+  },
   scroll: {
-    paddingBottom: 55,
+    paddingBottom: 65,
   },
   version: {
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: colors.border,
   },
   abb: {
     fontSize: 16,
     fontWeight: "bold",
+    color: colors.text,
   },
   name: {
     fontSize: 12,
+    color: colors.text,
   },
 });

@@ -1,6 +1,7 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Image } from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { colors } from "../config/constants";
 
 type ProfileImageProps = {
   uri: string;
@@ -15,10 +16,7 @@ export default function ProfileImage({ uri, size = 50 }: ProfileImageProps) {
       {error ? (
         <Ionicons
           name="person"
-          style={[
-            styles.icon,
-            {fontSize: size - 20},
-          ]}
+          style={{ fontSize: size - 20, color: colors.text }}
         />
       ) : (
         <Image
@@ -32,7 +30,3 @@ export default function ProfileImage({ uri, size = 50 }: ProfileImageProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  icon: {},
-});

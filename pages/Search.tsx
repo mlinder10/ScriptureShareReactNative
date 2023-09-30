@@ -1,14 +1,14 @@
 import {
   StyleSheet,
   Text,
-  ScrollView,
   TouchableOpacity,
   View,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { BookContext } from "../contexts/BookProvider";
-import { instanceAPI } from "../config/constants";
+import { colors, instanceAPI } from "../config/constants";
 import { VerseSchema } from "../config/schemas";
 import { VerseType } from "../config/types";
 import { NavContext } from "../contexts/navigation";
@@ -17,10 +17,11 @@ import Searchbar from "../components/Searchbar";
 export default function Search() {
   const { version, setBookData } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
-  const [verses, setVerses] = useState<VerseType[] | "loading" | "no match">(
-    []
-  );
   const [search, setSearch] = useState<string>("");
+  const [verseStatus, setVerseStatus] = useState<
+    "loading" | "no match" | "done"
+  >("done");
+  const [verses, setVerses] = useState<VerseType[]>([]);
 
   function handleFind(verse: VerseType) {
     setBookData(version, verse.chapterId);
@@ -32,7 +33,7 @@ export default function Search() {
 
     async function performSearch() {
       if (search === "") return;
-      setVerses("loading");
+      setVerseStatus("loading");
       try {
         let newVerses = [];
         const res = await instanceAPI.get(
@@ -44,8 +45,9 @@ export default function Search() {
           newVerses.push(VerseSchema.parse(verse));
         }
         setVerses(newVerses);
+        setVerseStatus("done");
       } catch (err: any) {
-        setVerses("no match");
+        setVerseStatus("no match");
         console.error(err?.message);
       }
     }
@@ -63,31 +65,28 @@ export default function Search() {
       <Searchbar
         search={search}
         setSearch={setSearch}
-        containerStyles={{ paddingTop: 30, backgroundColor: "#fff" }}
+        containerStyles={{ paddingTop: 30, backgroundColor: colors.bg }}
       />
-      <ScrollView style={styles.page} contentContainerStyle={styles.container}>
-        {verses === "loading" && (
-          <ActivityIndicator style={{ marginTop: 200 }} />
-        )}
-        {verses === "no match" && (
-          <View>
-            <Text>No matches for {search}</Text>
-          </View>
-        )}
-        {typeof verses !== "string" &&
-          verses.map((v) => (
-            <View style={styles.verse} key={v.id}>
-              <Text style={styles.chapter}>{v.reference}</Text>
-              <Text style={styles.text}>{v.text}</Text>
+      <View style={styles.page}>
+        {verseStatus === "loading" && <ActivityIndicator />}
+        {verseStatus === "no match" && <Text>No matches for {search}</Text>}
+        <FlatList
+          contentContainerStyle={styles.container}
+          data={verses}
+          renderItem={({ item }) => (
+            <View style={styles.verse} key={item.id}>
+              <Text style={styles.chapter}>{item.reference}</Text>
+              <Text style={styles.text}>{item.text}</Text>
               <TouchableOpacity
                 style={styles.read}
-                onPress={() => handleFind(v)}
+                onPress={() => handleFind(item)}
               >
                 <Text style={styles.readText}>Read</Text>
               </TouchableOpacity>
             </View>
-          ))}
-      </ScrollView>
+          )}
+        />
+      </View>
     </View>
   );
 }
@@ -95,33 +94,36 @@ export default function Search() {
 const styles = StyleSheet.create({
   page: {
     borderTopWidth: 1,
-    borderTopColor: "#bbb",
+    borderTopColor: colors.border,
   },
   container: {
     gap: 20,
-    paddingBottom: 100,
+    paddingBottom: 170,
   },
   verse: {
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     padding: 20,
     gap: 10,
   },
   chapter: {
     fontWeight: "bold",
+    color: colors.text,
   },
   text: {
     fontSize: 16,
     lineHeight: 20,
+    color: colors.text,
   },
   read: {
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
     alignSelf: "flex-start",
   },
   readText: {
-    color: "#fff",
+    color: colors.bg,
     fontSize: 16,
   },
 });

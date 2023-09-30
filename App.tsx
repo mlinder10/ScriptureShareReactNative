@@ -19,6 +19,7 @@ import ReadNote from "./pages/ReadNote";
 import CreateNote from "./pages/CreateNote";
 import User from "./pages/User";
 import Settings from "./pages/Settings";
+import { colors } from "./config/constants";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -32,7 +33,13 @@ export default function App() {
               initialRouteName="Login"
               screenOptions={{
                 animation: "none",
-                headerTitleStyle: { fontSize: 18, fontWeight: "600" },
+                headerTitleStyle: {
+                  fontSize: 18,
+                  fontWeight: "600",
+                  color: colors.text,
+                },
+                headerStyle: { backgroundColor: colors.bg },
+                contentStyle: { backgroundColor: colors.bgSecondary },
               }}
             >
               <Stack.Screen

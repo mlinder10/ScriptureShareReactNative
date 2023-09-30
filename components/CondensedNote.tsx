@@ -9,6 +9,7 @@ import { NoteType } from "../config/types";
 import { formatVerses, shortenContent } from "../config/helpers";
 import { NavContext } from "../contexts/navigation";
 import { useContext } from "react";
+import { colors } from "../config/constants";
 
 type CondensedNoteProps = {
   note: NoteType;
@@ -22,7 +23,7 @@ export default function CondensedNote({ note }: CondensedNoteProps) {
       <Text style={styles.verses}>
         {formatVerses(note.chapter, note.lineNumbers)}
       </Text>
-      <Text style={{ textAlign: "center" }}>
+      <Text style={{ textAlign: "center", color: colors.text }}>
         {shortenContent(note.content)}
       </Text>
       <TouchableOpacity
@@ -37,7 +38,7 @@ export default function CondensedNote({ note }: CondensedNoteProps) {
 
 const styles = StyleSheet.create({
   note: {
-    borderColor: "#888",
+    borderColor: colors.borderSecondary,
     borderWidth: 1,
     borderRadius: 10,
     width: (Dimensions.get("window").width - 40) / 2 - 10,
@@ -48,14 +49,15 @@ const styles = StyleSheet.create({
   },
   verses: {
     fontWeight: "bold",
+    color: colors.text
   },
   btn: {
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     borderRadius: 5,
     paddingVertical: 2,
     paddingHorizontal: 5,
   },
   btnText: {
-    color: "#fff",
+    color: colors.bg,
   },
 });

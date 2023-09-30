@@ -1,6 +1,7 @@
 import {
   View,
   Text,
+  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -11,6 +12,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import { NavContext } from "../contexts/navigation";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { LOGO_URI, colors } from "../config/constants";
 
 export default function Signup() {
   const { register } = useContext(AuthContext);
@@ -27,7 +29,11 @@ export default function Signup() {
   return (
     <View style={styles.page}>
       <View style={styles.upper}>
-        <Text>Scripture Share</Text>
+        <Image
+          style={{ width: "70%", height: "70%" }}
+          resizeMode="contain"
+          source={LOGO_URI}
+        />
       </View>
       <KeyboardAvoidingView behavior="padding" style={styles.lower}>
         <View style={styles.inputContainer}>
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: "100%",
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     alignItems: "center",
     borderRadius: 10,
     paddingVertical: 15,

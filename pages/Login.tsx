@@ -6,11 +6,13 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Pressable,
+  Image,
 } from "react-native";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import { NavContext } from "../contexts/navigation";
-import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { LOGO_URI, colors } from "../config/constants";
 
 export default function Login() {
   const { loginWithUsernameAndPassword } = useContext(AuthContext);
@@ -26,7 +28,11 @@ export default function Login() {
   return (
     <View style={styles.page}>
       <View style={styles.upper}>
-        <Text>Scripture Share</Text>
+        <Image
+          style={{ width: "70%", height: "70%" }}
+          resizeMode="contain"
+          source={LOGO_URI}
+        />
       </View>
       <KeyboardAvoidingView behavior="padding" style={styles.lower}>
         <View style={styles.inputContainer}>
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: "100%",
-    backgroundColor: "#08f",
+    backgroundColor: colors.primary,
     alignItems: "center",
     borderRadius: 10,
     paddingVertical: 15,
