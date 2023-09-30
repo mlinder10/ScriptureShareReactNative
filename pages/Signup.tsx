@@ -44,6 +44,7 @@ export default function Signup() {
               keyboardType="ascii-capable"
               style={styles.textInput}
               placeholder="Username"
+              placeholderTextColor={colors.cancel}
               value={username}
               onChangeText={(username) => setUsername(username)}
             />
@@ -56,6 +57,7 @@ export default function Signup() {
               keyboardType="ascii-capable"
               style={styles.textInput}
               placeholder="Password"
+              placeholderTextColor={colors.cancel}
               value={password}
               onChangeText={(password) => setPassword(password)}
             />
@@ -74,6 +76,7 @@ export default function Signup() {
               keyboardType="ascii-capable"
               style={styles.textInput}
               placeholder="Confirm Password"
+              placeholderTextColor={colors.cancel}
               value={confirmPassword}
               onChangeText={(confirmPassword) =>
                 setConfirmPassword(confirmPassword)
@@ -128,18 +131,19 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: "#bbb",
+    borderBottomColor: colors.border,
     paddingBottom: 15,
     flexDirection: "row",
     gap: 5,
   },
   icon: {
     fontSize: 24,
-    color: "#999",
+    color: colors.cancel,
   },
   textInput: {
     fontSize: 16,
     flex: 1,
+    color: colors.text,
   },
   btnContainer: {
     alignItems: "center",
@@ -158,10 +162,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 15,
     borderWidth: 1,
-    borderColor: "#999",
+    borderColor: colors.cancel,
   },
   btnText: {
-    color: "#fff",
+    color: colors.bg,
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -171,12 +175,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   line: {
-    backgroundColor: "#bbb",
+    backgroundColor: colors.border,
     height: 1,
     flex: 1,
   },
   or: {
-    color: "#bbb",
+    color: colors.border,
     paddingHorizontal: 10,
   },
 });
