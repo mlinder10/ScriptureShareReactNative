@@ -20,6 +20,7 @@ import ChangeChapter from "./pages/ChangeChapter";
 import ReadNote from "./pages/ReadNote";
 import CreateNote from "./pages/CreateNote";
 import { colors } from "./config/constants";
+import FilterNotes from "./pages/FilterNotes";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -76,6 +77,15 @@ export default function App() {
               <Stack.Screen
                 name="ChangeVersion"
                 component={ChangeVersion}
+                options={{
+                  presentation: "modal",
+                  animation: "slide_from_bottom",
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="FilterNotes"
+                component={FilterNotes}
                 options={{
                   presentation: "modal",
                   animation: "slide_from_bottom",

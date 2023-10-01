@@ -16,6 +16,7 @@ import { BookContext } from "../contexts/BookProvider";
 import ReadHeader from "../components/ReadHeader";
 import Line from "../components/Line";
 import { colors } from "../config/constants";
+import { NavContext } from "../contexts/navigation";
 
 export default function Read() {
   const {
@@ -28,6 +29,7 @@ export default function Read() {
     selectedLines,
     handleSelectLine,
   } = useContext(BookContext);
+  const { navigate } = useContext(NavContext);
   const [scrolling, setScrolling] = useState<boolean>(false);
   const [prevScroll, setPrevScroll] = useState<number>(0);
   const scrollRef = createRef<ScrollView>();
@@ -64,23 +66,14 @@ export default function Read() {
   }, [version, book, chapter]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ReadHeader
-        scroll={scrolling}
-        lines={{
-          numbers: selectedLines,
-          text: content.lines.slice(
-            selectedLines[0] - 1,
-            selectedLines[selectedLines.length - 1]
-          ),
-        }}
-      />
+    <View style={{ flex: 1, position: "relative" }}>
+      <ReadHeader scroll={scrolling} />
       <ScrollView
         ref={scrollRef}
         style={{ flex: 4 }}
         contentContainerStyle={styles.textContainer}
         onScroll={handleScroll}
-        scrollEventThrottle={16}
+        scrollEventThrottle={60}
       >
         {content.lines.length === 0 ? (
           <ActivityIndicator style={{ marginTop: 200 }} />
@@ -116,6 +109,24 @@ export default function Read() {
           </>
         )}
       </ScrollView>
+      {selectedLines.length !== 0 && (
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={() =>
+            navigate("CreateNote", {
+              lines: {
+                numbers: selectedLines,
+                text: content.lines.slice(
+                  selectedLines[0] - 1,
+                  selectedLines[selectedLines.length - 1]
+                ),
+              },
+            })
+          }
+        >
+          <Ionicons name="pencil" color={colors.text} size={30} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -141,7 +152,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   text: {
-    color: "#fff",
+    color: colors.bg,
     fontSize: 16,
+  },
+  addBtn: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: colors.text,
+    borderWidth: 1,
   },
 });

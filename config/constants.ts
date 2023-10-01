@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Appearance } from "react-native";
+import { FilterType } from "./types";
 
 // export const SERVER = "http://localhost:3001";
 const SERVER = "https://scripture-share-backend.vercel.app";
@@ -35,13 +36,15 @@ export const instanceAPI = axios.create({
   baseURL: BIBLE_URL,
 });
 
+export const DEFAULT_FILTER: FilterType = "*"
+
 export const DEFAULT_CONTENT = {
   lines: [],
   next: "",
   previous: "",
 };
 
-export const BookProviderDefault = {
+export const BookProviderDefault:any = {
   version: DEFAULT_VERSION,
   book: DEFAULT_BOOK,
   chapter: DEFAULT_CHAPTER,
@@ -57,6 +60,8 @@ export const BookProviderDefault = {
   getLocalData: async () => {},
   setBookData: async () => {},
   postNote: async () => {},
+  filter: "*",
+  setFilter: () => {},
 };
 
 export const AuthProviderDefault = {

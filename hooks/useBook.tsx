@@ -4,6 +4,7 @@ import { BooksSchema, LocalStorageSchema } from "../config/schemas";
 import {
   DEFAULT_BOOK_INFO,
   DEFAULT_CONTENT,
+  DEFAULT_FILTER,
   instanceBackend,
 } from "../config/constants";
 import { z } from "zod";
@@ -12,6 +13,7 @@ import {
   BibleType,
   BookInfo,
   ContentType,
+  FilterType,
   NoteType,
   UserType,
 } from "../config/types";
@@ -22,6 +24,7 @@ export default function useBook() {
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
   const [dataFetched, setDataFetched] = useState<boolean>(false);
+  const [filter, setFilter] = useState<FilterType>(DEFAULT_FILTER);
   const [bookOptions, setBookOptions] = useState<z.infer<typeof BooksSchema>[]>(
     []
   );
@@ -170,5 +173,7 @@ export default function useBook() {
     selectedLines,
     handleSelectLine,
     postNote,
+    filter,
+    setFilter,
   };
 }

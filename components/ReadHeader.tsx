@@ -5,14 +5,8 @@ import { NavContext } from "../contexts/navigation";
 import { filterAbb } from "../config/helpers";
 import { colors } from "../config/constants";
 
-type LineType = {
-  text: string[];
-  numbers: number[];
-};
-
 type ReadHeaderProps = {
   scroll: boolean;
-  lines: LineType;
 };
 
 const scrollContainerStyles = {
@@ -24,7 +18,7 @@ const scrollBtnStyles = {
   fontSize: 14,
 };
 
-export default function ReadHeader({ scroll, lines }: ReadHeaderProps) {
+export default function ReadHeader({ scroll }: ReadHeaderProps) {
   const { chapter, version } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
 
@@ -48,11 +42,14 @@ export default function ReadHeader({ scroll, lines }: ReadHeaderProps) {
           </Text>
         </TouchableOpacity>
       </View>
-      {lines.numbers.length !== 0 && (
-        <TouchableOpacity onPress={() => navigate("CreateNote", { lines })}>
-          <Text style={styles.noteText}>Make Note</Text>
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        style={styles.filterBtn}
+        onPress={() => navigate("FilterNotes")}
+      >
+        <Text style={[styles.filterText, scroll ? { fontSize: 14 } : null]}>
+          Filter Notes
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -92,11 +89,19 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 5,
   },
   text: {
-    color: colors.text,
+    color: colors.bg,
     fontSize: 18,
   },
-  noteText: {
-    fontSize: 16,
-    color: colors.cancel,
+  filterBtn: {
+    borderColor: colors.primary,
+    backgroundColor: colors.bgSecondary,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  filterText: {
+    color: colors.primary,
+    fontSize: 18,
   },
 });
