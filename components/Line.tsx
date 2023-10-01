@@ -2,22 +2,18 @@ import { Text } from "react-native";
 import Notes from "./Notes";
 import { NoteType } from "../config/types";
 import { colors } from "../config/constants";
+import { BookContext } from "../contexts/BookProvider";
+import { useContext } from "react";
 
 type LineProps = {
   line: string;
   number: number;
   notes: NoteType[];
-  selectedLines: number[];
   selectLine: (number: number) => void;
 };
 
-export default function Line({
-  line,
-  number,
-  notes,
-  selectedLines,
-  selectLine,
-}: LineProps) {
+export default function Line({ line, number, notes, selectLine }: LineProps) {
+  const { selectedLines } = useContext(BookContext);
   function handleSelectLine() {
     if (line !== "\n\t") selectLine(number);
   }

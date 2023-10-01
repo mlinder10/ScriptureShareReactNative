@@ -18,8 +18,16 @@ import Line from "../components/Line";
 import { colors } from "../config/constants";
 
 export default function Read() {
-  const { version, book, chapter, setBookData, content, notes, selectedLines, handleSelectLine } =
-    useContext(BookContext);
+  const {
+    version,
+    book,
+    chapter,
+    setBookData,
+    content,
+    notes,
+    selectedLines,
+    handleSelectLine,
+  } = useContext(BookContext);
   const [scrolling, setScrolling] = useState<boolean>(false);
   const [prevScroll, setPrevScroll] = useState<number>(0);
   const scrollRef = createRef<ScrollView>();
@@ -27,8 +35,7 @@ export default function Read() {
   function getNotes(lineNum: number) {
     let validNotes = [];
     for (const note of notes) {
-      if (note.lineNumbers[0] === lineNum)
-        validNotes.push(note);
+      if (note.lineNumbers[0] === lineNum) validNotes.push(note);
     }
     return validNotes;
   }
@@ -87,7 +94,6 @@ export default function Read() {
                   number={getLineNum(l)}
                   line={l}
                   notes={getNotes(getLineNum(l))}
-                  selectedLines={selectedLines}
                 />
               ))}
             </Text>
