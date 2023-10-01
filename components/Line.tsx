@@ -18,14 +18,13 @@ export default function Line({
   selectedLines,
   selectLine,
 }: LineProps) {
-
   function handleSelectLine() {
-    if (line !== "\n\t")
-    selectLine(number)
+    if (line !== "\n\t") selectLine(number);
   }
 
   return (
     <>
+      <Notes notes={notes} />
       <Text
         onPress={handleSelectLine}
         suppressHighlighting={true}
@@ -34,12 +33,11 @@ export default function Line({
             ? "underline"
             : "none",
           textDecorationColor: colors.primary,
-          color: colors.text
+          color: colors.text,
         }}
       >
         {line}
       </Text>
-      <Notes notes={notes} />
     </>
   );
 }

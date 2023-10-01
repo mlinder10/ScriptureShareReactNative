@@ -1,24 +1,24 @@
 import { StatusBar } from "expo-status-bar";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { StackParamList } from "./config/types";
+import { navigationRef } from "./contexts/navigation";
 import AuthProvider from "./contexts/AuthProvider";
-import Login from "./pages/Login";
+import BookProvider from "./contexts/BookProvider";
+import NavigationProvider from "./contexts/navigation";
+import BottomNav from "./components/BottomNav";
 import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Read from "./pages/Read";
-import { StackParamList } from "./config/types";
-import BookProvider from "./contexts/BookProvider";
-import { navigationRef } from "./contexts/navigation";
-import BottomNav from "./components/BottomNav";
 import Account from "./pages/Account";
-import NavigationProvider from "./contexts/navigation";
 import Search from "./pages/Search";
+import Settings from "./pages/Settings";
+import User from "./pages/User";
 import ChangeVersion from "./pages/ChangeVersion";
 import ChangeChapter from "./pages/ChangeChapter";
 import ReadNote from "./pages/ReadNote";
 import CreateNote from "./pages/CreateNote";
-import User from "./pages/User";
-import Settings from "./pages/Settings";
 import { colors } from "./config/constants";
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -56,16 +56,12 @@ export default function App() {
               <Stack.Screen
                 name="Read"
                 component={Read}
-                options={{
-                  headerShown: false,
-                }}
+                options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="Search"
                 component={Search}
-                options={{
-                  headerShown: false,
-                }}
+                options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="Account"

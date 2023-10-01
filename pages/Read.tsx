@@ -27,7 +27,7 @@ export default function Read() {
   function getNotes(lineNum: number) {
     let validNotes = [];
     for (const note of notes) {
-      if (note.lineNumbers[note.lineNumbers.length - 1] === lineNum)
+      if (note.lineNumbers[0] === lineNum)
         validNotes.push(note);
     }
     return validNotes;

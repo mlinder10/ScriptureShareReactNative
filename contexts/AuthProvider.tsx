@@ -12,14 +12,14 @@ type AuthProviderProps = {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const authObject = useAuth();
-  const { replace, route } = useContext(NavContext);
+  const { fullReplace, route } = useContext(NavContext);
 
   useEffect(() => {
     if ((route === "Login" || route === "Signup") && authObject.user !== null)
-      replace("Home");
+      fullReplace("Home");
 
     if (route !== "Login" && route !== "Signup" && authObject.user === null)
-      replace("Login");
+      fullReplace("Login");
   }, [route, authObject.user]);
 
   return (
