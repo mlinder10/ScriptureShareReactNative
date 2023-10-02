@@ -24,9 +24,7 @@ export default function ChangeVersion() {
     try {
       const res = await getBibleVersions();
       if (res !== null) setVersions(res);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   function handleVersionChange(version: BibleType) {

@@ -13,6 +13,7 @@ import { AuthContext } from "../contexts/AuthProvider";
 import { NavContext } from "../contexts/navigation";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { LOGO_URI, colors } from "../config/constants";
+import Toast from "../components/Toast";
 
 export default function Signup() {
   const { register } = useContext(AuthContext);
@@ -20,10 +21,12 @@ export default function Signup() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [toast, setToast] = useState<string | null>(null);
   const { replace } = useContext(NavContext);
 
-  function handleRegister() {
-    register(username, password, confirmPassword);
+  async function handleRegister() {
+    const res = await register(username, password, confirmPassword);
+    setToast(res);
   }
 
   return (
@@ -107,6 +110,7 @@ export default function Signup() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      <Toast message={toast} setMessage={setToast} />
     </View>
   );
 }

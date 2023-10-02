@@ -37,9 +37,7 @@ export default function Home() {
         `/note/friends/${user._id}?limit=${notesLimit}`
       );
       setFriendsNotes(res.data.notes);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function fetchNewFriends() {
@@ -47,18 +45,14 @@ export default function Home() {
     try {
       const res = await instanceBackend.get(`/user/nfriends/${user._id}`);
       setUsers(res.data.users);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function fetchBibles() {
     try {
       const res = await getBibleVersions();
       if (res !== null) setBibles(res);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   function handleSelectBible(version: BibleType) {
@@ -93,7 +87,6 @@ export default function Home() {
         setFriendsNotes([...friendsNotes, ...res.data.notes]);
         setFetchingNotes(false);
       } catch (err: any) {
-        console.error(err?.message);
         setFetchingNotes(false);
       }
     }

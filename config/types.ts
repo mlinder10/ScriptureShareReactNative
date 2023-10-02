@@ -50,12 +50,12 @@ export type AuthContextType = {
   loginWithUsernameAndPassword: (
     username: string,
     password: string
-  ) => Promise<void>;
+  ) => Promise<string | null>;
   register: (
     username: string,
     password: string,
     confirmPassword: string
-  ) => Promise<void>;
+  ) => Promise<string | null>;
   logout: () => void;
   updateUser: (user: UserType) => void;
   setToken: (token: string) => Promise<void>;
@@ -79,7 +79,7 @@ export type ContentType = {
   previous: string;
 };
 
-export type FilterType = string[] | "*"
+export type FilterType = string[] | "*";
 
 export type StackParamList = {
   Signup: undefined;
@@ -95,6 +95,7 @@ export type StackParamList = {
   CreateNote: { lines: LineType };
   User: { user: UserType };
   Settings: undefined;
+  Friends: { friends: UserType[] };
 };
 
 export type NavigationProps = NativeStackNavigationProp<StackParamList>;

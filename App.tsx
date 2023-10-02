@@ -21,6 +21,7 @@ import ReadNote from "./pages/ReadNote";
 import CreateNote from "./pages/CreateNote";
 import { colors } from "./config/constants";
 import FilterNotes from "./pages/FilterNotes";
+import Friends from "./pages/Friends";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -73,6 +74,15 @@ export default function App() {
                 name="Settings"
                 component={Settings}
                 options={{ animation: "simple_push" }}
+              />
+              <Stack.Screen
+                name="Friends"
+                component={Friends}
+                options={{
+                  animation: "slide_from_bottom",
+                  presentation: "modal",
+                  headerShown: false,
+                }}
               />
               <Stack.Screen
                 name="ChangeVersion"

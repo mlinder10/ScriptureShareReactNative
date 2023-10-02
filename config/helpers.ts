@@ -13,7 +13,6 @@ export async function getBibleVersions() {
     const res = await instanceAPI("bibles?language=eng");
     return z.array(BiblesSchema).parse(res.data.data);
   } catch (err: any) {
-    console.error(err?.message);
     return null;
   }
 }
@@ -23,7 +22,6 @@ export async function getBooks(version: string) {
     const res = await instanceAPI(`bibles/${version}/books`);
     return z.array(BooksSchema).parse(res.data.data);
   } catch (err: any) {
-    console.error(err?.message);
     return null;
   }
 }
@@ -35,7 +33,6 @@ export async function getChapters(version: string, book: string) {
     );
     return z.array(ChaptersSchema).parse(res.data.data);
   } catch (err: any) {
-    console.error(err?.message);
     return null;
   }
 }
@@ -112,7 +109,6 @@ export async function uploadProfilePic(_id: string, file: FileType) {
 
     return { path };
   } catch (err: any) {
-    console.error(err?.message);
     return { path: null };
   }
 }

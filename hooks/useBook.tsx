@@ -39,9 +39,7 @@ export default function useBook() {
         book: data.book,
         chapter: data.chapter,
       });
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function setBookData(version: BibleType, chapter: string) {
@@ -52,9 +50,7 @@ export default function useBook() {
         "SSData",
         JSON.stringify({ version, book, chapter })
       );
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function postNote(
@@ -75,9 +71,7 @@ export default function useBook() {
       });
       setSelectedLines([]);
       fetchNotes();
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   function handleSelectLine(number: number) {
@@ -118,9 +112,7 @@ export default function useBook() {
         next: res.next,
         previous: res.previous,
       });
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function fetchNotes() {
@@ -131,9 +123,7 @@ export default function useBook() {
         }/${"0cac5b7f-5397-4494-8cb4-d0f017a6081b"}`
       );
       setNotes(res.data.notes);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   useEffect(() => {
@@ -142,9 +132,7 @@ export default function useBook() {
         const res = await getBooks(bookInfo.version.id);
         if (res === null) return;
         setBookOptions(res);
-      } catch (err: any) {
-        console.error(err?.message);
-      }
+      } catch (err: any) {}
     }
 
     fetchBooks();

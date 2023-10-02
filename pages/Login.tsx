@@ -13,16 +13,19 @@ import { AuthContext } from "../contexts/AuthProvider";
 import { NavContext } from "../contexts/navigation";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { LOGO_URI, colors } from "../config/constants";
+import Toast from "../components/Toast";
 
 export default function Login() {
   const { loginWithUsernameAndPassword } = useContext(AuthContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [toast, setToast] = useState<string | null>(null);
   const { replace } = useContext(NavContext);
 
-  function handleLogin() {
-    loginWithUsernameAndPassword(username, password);
+  async function handleLogin() {
+    const res = await loginWithUsernameAndPassword(username, password);
+    setToast(res);
   }
 
   return (
@@ -85,6 +88,7 @@ export default function Login() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      <Toast message={toast} setMessage={setToast} />
     </View>
   );
 }

@@ -16,7 +16,6 @@ export default function useAuth() {
       setUser(jsonUser);
       await instanceBackend.get(`/auth/${jsonUser.token._id}`);
     } catch (err: any) {
-      console.error(err?.message);
       setUser(null);
     }
   }
@@ -26,12 +25,14 @@ export default function useAuth() {
     password: string
   ) {
     try {
+      if (username === "" || password === "") return "Empty field(s)";
       const res = await instanceBackend.get(
         `/auth?username=${username}&password=${password}`
       );
       updateUser(res.data.user);
+      return null;
     } catch (err: any) {
-      console.error(err?.message);
+      return err.response.data.message;
     }
   }
 
@@ -40,30 +41,31 @@ export default function useAuth() {
     password: string,
     confirmPassword: string
   ) {
-    if (password !== confirmPassword) return;
+    if (username.length < 3 || username.length > 12)
+      return "Username must be between three and twelve characters";
+    if (password.length < 8 || password.length > 20)
+      return "Password must be between eight and twenty characters";
+    if (password !== confirmPassword) return "Password fields must match";
     try {
       const res = await instanceBackend.post("/auth", { username, password });
       updateUser(res.data.user);
+      return null;
     } catch (err: any) {
-      console.error(err?.message);
+      return err.response.data.message;
     }
   }
 
   async function setToken(token: string) {
     try {
       await AsyncStorage.setItem("ss-token", token);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function updateUser(newUser: UserType | null) {
     try {
       setUser(newUser);
       await AsyncStorage.setItem("SSUser", JSON.stringify(newUser));
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function fetchFriends() {
@@ -71,9 +73,7 @@ export default function useAuth() {
     try {
       const res = await instanceBackend.get(`/user/friends/${user._id}`);
       setFriends(res.data.friends);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   function logout() {
@@ -81,7 +81,7 @@ export default function useAuth() {
   }
 
   useEffect(() => {
-    fetchFriends()
+    fetchFriends();
   }, [user]);
 
   useEffect(() => {

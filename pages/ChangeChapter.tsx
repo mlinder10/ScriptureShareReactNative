@@ -30,9 +30,7 @@ export default function ChangeChapter() {
       const res = await getChapters(version.id, selectedBook);
       if (res === null) return;
       setChapterOptions(res);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   function handleSelectBook(book: string) {

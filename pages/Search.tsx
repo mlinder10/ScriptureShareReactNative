@@ -48,7 +48,6 @@ export default function Search() {
         setVerseStatus("done");
       } catch (err: any) {
         setVerseStatus("no match");
-        console.error(err?.message);
       }
     }
 

@@ -15,6 +15,7 @@ import { colors, instanceBackend } from "../config/constants";
 import ProfileImage from "../components/ProfileImage";
 import CondensedNote from "../components/CondensedNote";
 import CondensedUser from "../components/CondensedUser";
+import { NavContext } from "../contexts/navigation";
 
 type UserProps = {
   route: RouteProp<StackParamList, "User">;
@@ -24,6 +25,7 @@ type UserProps = {
 export default function User({ route, navigation }: UserProps) {
   const pageUser = route.params.user;
   const { user, updateUser } = useContext(AuthContext);
+  const { navigate } = useContext(NavContext);
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [friends, setFriends] = useState<UserType[]>([]);
   const friend = user?.friends.includes(pageUser._id);
@@ -43,27 +45,21 @@ export default function User({ route, navigation }: UserProps) {
         });
 
       updateUser({ ...user, friends: [...user.friends, pageUser._id] });
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function fetchNotes() {
     try {
       const res = await instanceBackend.get(`/note/${pageUser._id}`);
       setNotes(res.data.notes);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   async function fetchFriends() {
     try {
       const res = await instanceBackend.get(`/user/friends/${pageUser._id}`);
       setFriends(res.data.friends);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   useEffect(() => {
@@ -95,12 +91,27 @@ export default function User({ route, navigation }: UserProps) {
           />
         </View>
         <View style={styles.row}>
-          <Text style={styles.rowTitle}>
-            {pageUser.username + "'s"} Friends
-          </Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={styles.rowTitle}>
+              {pageUser.username + "'s"} Friends
+            </Text>
+            <TouchableOpacity onPress={() => navigate("Friends", { friends })}>
+              <Text
+                style={{
+                  color: colors.primary,
+                  marginTop: 20,
+                  marginRight: 20,
+                }}
+              >
+                View All
+              </Text>
+            </TouchableOpacity>
+          </View>
           <FlatList
             contentContainerStyle={[styles.flatListInner, { height: 120 }]}
-            data={friends}
+            data={friends.slice(0, 5)}
             horizontal
             renderItem={({ item }) => <CondensedUser user={item} />}
           />
@@ -190,3 +201,6 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
 });
+function fullReplace(arg0: string) {
+  throw new Error("Function not implemented.");
+}

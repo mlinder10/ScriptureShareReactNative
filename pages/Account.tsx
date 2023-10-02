@@ -60,9 +60,7 @@ export default function Account() {
     try {
       const res = await instanceBackend.get(`/note/${user._id}`);
       setNotes(res.data.notes);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    } catch (err: any) {}
   }
 
   useEffect(() => {
@@ -94,11 +92,29 @@ export default function Account() {
           />
         </View>
         <View style={styles.row}>
-          <Text style={styles.rowTitle}>Your Friends</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={styles.rowTitle}>Your Friends</Text>
+            <TouchableOpacity onPress={() => navigate("Friends", { friends })}>
+              <Text
+                style={{
+                  color: colors.primary,
+                  marginTop: 20,
+                  marginRight: 20,
+                }}
+              >
+                View All
+              </Text>
+            </TouchableOpacity>
+          </View>
           <FlatList
             ListEmptyComponent={FriendsEmpty}
             contentContainerStyle={[styles.flatListInner, { height: 120 }]}
-            data={friends}
+            data={friends.slice(0, 5)}
             horizontal
             renderItem={({ item }) => <CondensedUser user={item} />}
           />
