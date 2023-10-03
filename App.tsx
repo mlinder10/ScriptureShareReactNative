@@ -42,6 +42,7 @@ export default function App() {
                 },
                 headerStyle: { backgroundColor: colors.bg },
                 contentStyle: { backgroundColor: colors.bgSecondary },
+                headerTintColor: colors.primary,
               }}
             >
               <Stack.Screen

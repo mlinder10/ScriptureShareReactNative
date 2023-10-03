@@ -13,7 +13,7 @@ type LineProps = {
 };
 
 export default function Line({ line, number, notes, selectLine }: LineProps) {
-  const { selectedLines } = useContext(BookContext);
+  const { selectedLines, fontSize, fontWeight } = useContext(BookContext);
   function handleSelectLine() {
     if (line !== "\n\t") selectLine(number);
   }
@@ -30,6 +30,8 @@ export default function Line({ line, number, notes, selectLine }: LineProps) {
             : "none",
           textDecorationColor: colors.primary,
           color: colors.text,
+          fontSize,
+          fontWeight: `${fontWeight}`,
         }}
       >
         {line}

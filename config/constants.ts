@@ -20,6 +20,9 @@ export const DEFAULT_VERSION = {
 export const DEFAULT_BOOK = "GEN";
 export const DEFAULT_CHAPTER = "GEN.1";
 
+export const DEFAULT_FONT_SIZE = 16;
+export const DEFAULT_FONT_WEIGHT = 400;
+
 export const DEFAULT_BOOK_INFO = {
   version: DEFAULT_VERSION,
   book: DEFAULT_BOOK,
@@ -36,7 +39,7 @@ export const instanceAPI = axios.create({
   baseURL: BIBLE_URL,
 });
 
-export const DEFAULT_FILTER: FilterType = "*"
+export const DEFAULT_FILTER: FilterType = "*";
 
 export const DEFAULT_CONTENT = {
   lines: [],
@@ -44,7 +47,7 @@ export const DEFAULT_CONTENT = {
   previous: "",
 };
 
-export const BookProviderDefault:any = {
+export const BookProviderDefault: any = {
   version: DEFAULT_VERSION,
   book: DEFAULT_BOOK,
   chapter: DEFAULT_CHAPTER,
@@ -62,6 +65,9 @@ export const BookProviderDefault:any = {
   postNote: async () => {},
   filter: "*",
   setFilter: () => {},
+  fontSize: DEFAULT_FONT_SIZE,
+  fontWeight: DEFAULT_FONT_WEIGHT,
+  setFontData: () => {}
 };
 
 export const AuthProviderDefault = {

@@ -1,10 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { BooksSchema, LocalStorageSchema } from "../config/schemas";
+import {
+  BookStorageSchema,
+  BooksSchema,
+  FontStorageSchema,
+} from "../config/schemas";
 import {
   DEFAULT_BOOK_INFO,
   DEFAULT_CONTENT,
   DEFAULT_FILTER,
+  DEFAULT_FONT_SIZE,
+  DEFAULT_FONT_WEIGHT,
   instanceBackend,
 } from "../config/constants";
 import { z } from "zod";
@@ -14,11 +20,15 @@ import {
   BookInfo,
   ContentType,
   FilterType,
+  FontWeightType,
   NoteType,
   UserType,
 } from "../config/types";
 
 export default function useBook() {
+  const [fontSize, setFontSize] = useState<number>(DEFAULT_FONT_SIZE);
+  const [fontWeight, setFontWeight] =
+    useState<FontWeightType>(DEFAULT_FONT_WEIGHT);
   const [bookInfo, setBookInfo] = useState<BookInfo>(DEFAULT_BOOK_INFO);
   const [content, setContent] = useState<ContentType>(DEFAULT_CONTENT);
   const [notes, setNotes] = useState<NoteType[]>([]);
@@ -32,13 +42,20 @@ export default function useBook() {
   async function getLocalData() {
     try {
       const res = await AsyncStorage.getItem("SSData");
-      if (res === null) return;
-      const data = LocalStorageSchema.parse(JSON.parse(res));
-      setBookInfo({
-        version: data.version,
-        book: data.book,
-        chapter: data.chapter,
-      });
+      if (res !== null) {
+        const bookData = BookStorageSchema.parse(JSON.parse(res));
+        setBookInfo({
+          version: bookData.version,
+          book: bookData.book,
+          chapter: bookData.chapter,
+        });
+      }
+      const res2 = await AsyncStorage.getItem("SSFont");
+      if (res2 !== null) {
+        const fontData = FontStorageSchema.parse(JSON.parse(res2));
+        setFontSize(fontData.fontSize);
+        setFontWeight(fontData.fontWeight as FontWeightType);
+      }
     } catch (err: any) {}
   }
 
@@ -49,6 +66,17 @@ export default function useBook() {
       await AsyncStorage.setItem(
         "SSData",
         JSON.stringify({ version, book, chapter })
+      );
+    } catch (err: any) {}
+  }
+
+  async function setFontData(fontSize: number, fontWeight: FontWeightType) {
+    try {
+      setFontSize(fontSize);
+      setFontWeight(fontWeight);
+      await AsyncStorage.setItem(
+        "SSFont",
+        JSON.stringify({ fontSize, fontWeight })
       );
     } catch (err: any) {}
   }
@@ -163,5 +191,8 @@ export default function useBook() {
     postNote,
     filter,
     setFilter,
+    fontSize,
+    fontWeight,
+    setFontData
   };
 }

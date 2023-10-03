@@ -64,8 +64,13 @@ export const VerseSchema = z.object({
   bookId: z.string(),
 });
 
-export const LocalStorageSchema = z.object({
+export const BookStorageSchema = z.object({
   version: BiblesSchema,
   book: z.string(),
   chapter: z.string(),
+});
+
+export const FontStorageSchema = z.object({
+  fontSize: z.number(),
+  fontWeight: z.number(),
 });

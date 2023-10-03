@@ -14,7 +14,8 @@ export default function useAuth() {
       const jsonUser = JSON.parse(user);
       if (jsonUser === null) return;
       setUser(jsonUser);
-      await instanceBackend.get(`/auth/${jsonUser.token._id}`);
+      const res = await instanceBackend.get(`/auth/${jsonUser.token._id}`);
+      setUser(res.data.user);
     } catch (err: any) {
       setUser(null);
     }

@@ -42,6 +42,9 @@ export type BookContextType = {
   ) => Promise<void>;
   filter: FilterType;
   setFilter: Dispatch<SetStateAction<FilterType>>;
+  fontSize: number;
+  fontWeight: FontWeightType;
+  setFontData: (fontSize: number, fontWeight: FontWeightType) => void;
 };
 
 export type AuthContextType = {
@@ -80,6 +83,17 @@ export type ContentType = {
 };
 
 export type FilterType = string[] | "*";
+
+export type FontWeightType =
+  | 100
+  | 200
+  | 300
+  | 400
+  | 500
+  | 600
+  | 700
+  | 800
+  | 900;
 
 export type StackParamList = {
   Signup: undefined;
