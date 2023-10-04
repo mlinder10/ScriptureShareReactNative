@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   BookStorageSchema,
   BooksSchema,
@@ -24,8 +24,10 @@ import {
   NoteType,
   UserType,
 } from "../config/types";
+import { AuthContext } from "../contexts/AuthProvider";
 
 export default function useBook() {
+  const { user } = useContext(AuthContext)
   const [fontSize, setFontSize] = useState<number>(DEFAULT_FONT_SIZE);
   const [fontWeight, setFontWeight] =
     useState<FontWeightType>(DEFAULT_FONT_WEIGHT);
@@ -148,7 +150,7 @@ export default function useBook() {
       const res = await instanceBackend.get(
         `/note/${bookInfo.version.id}/${
           bookInfo.chapter
-        }/${"0cac5b7f-5397-4494-8cb4-d0f017a6081b"}`
+        }/${user?._id}`
       );
       setNotes(res.data.notes);
     } catch (err: any) {}

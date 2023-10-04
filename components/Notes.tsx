@@ -19,24 +19,23 @@ export default function Notes({ notes }: NoteProps) {
 
   return (
     <>
-      {notes.length !== 0 &&
-        notes.map((note) => (
-          <Fragment key={note._id}>
-            {(filter === "*" || filter.includes(note.userId)) && (
-              <TouchableOpacity onPress={() => navigate("ReadNote", { note })}>
-                <Ionicons
-                  name="bookmark"
-                  size={16}
-                  color={
-                    friends.find((f) => f._id === note.userId)?.color ??
-                    user?.color ??
-                    colors.primary
-                  }
-                />
-              </TouchableOpacity>
-            )}
-          </Fragment>
-        ))}
+      {notes.map((note) => (
+        <Fragment key={note._id}>
+          {(filter === "*" || filter.includes(note.userId)) && (
+            <TouchableOpacity onPress={() => navigate("ReadNote", { note })}>
+              <Ionicons
+                name="bookmark"
+                size={16}
+                color={
+                  friends.find((f) => f._id === note.userId)?.color ??
+                  user?.color ??
+                  colors.primary
+                }
+              />
+            </TouchableOpacity>
+          )}
+        </Fragment>
+      ))}
     </>
   );
 }
