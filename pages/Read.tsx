@@ -110,22 +110,22 @@ export default function Read() {
         )}
       </ScrollView>
       {selectedLines.length !== 0 && (
-        <TouchableOpacity
-          style={styles.addBtn}
-          onPress={() =>
-            navigate("CreateNote", {
-              lines: {
-                numbers: selectedLines,
-                text: content.lines.slice(
-                  selectedLines[0] - 1,
-                  selectedLines[selectedLines.length - 1]
-                ),
-              },
-            })
-          }
-        >
-          <Ionicons name="pencil" color={colors.text} size={30} />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.addBtn}
+            onPress={() =>
+              navigate("CreateNote", {
+                lines: {
+                  numbers: selectedLines,
+                  text: content.lines.slice(
+                    selectedLines[0] - 1,
+                    selectedLines[selectedLines.length - 1]
+                  ),
+                },
+              })
+            }
+          >
+            <Ionicons name="pencil" color={colors.text} size={30} />
+          </TouchableOpacity>
       )}
     </View>
   );
@@ -159,6 +159,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 30,
     right: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: colors.text,
+    borderWidth: 1,
+  },
+  compareBtn: {
+    position: "absolute",
+    bottom: 30,
+    left: 30,
     width: 60,
     height: 60,
     borderRadius: 60,
