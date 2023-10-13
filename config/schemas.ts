@@ -5,18 +5,6 @@ export const TokenSchema = z.object({
   date: z.date(),
 });
 
-export const UserSchema = z.object({
-  _id: z.string(),
-  token: TokenSchema,
-  username: z.string().max(20),
-  password: z.string(),
-  profileImage: z.string(),
-  color: z.string(),
-  friends: z.array(z.string()),
-  notes: z.array(z.string()),
-  bookmarks: z.array(z.string()),
-});
-
 export const NoteSchema = z.object({
   _id: z.string(),
   lines: z.array(z.string()),
@@ -73,4 +61,18 @@ export const BookStorageSchema = z.object({
 export const FontStorageSchema = z.object({
   fontSize: z.number(),
   fontWeight: z.number(),
+});
+
+export const UserSchema = z.object({
+  _id: z.string(),
+  token: TokenSchema,
+  username: z.string().max(20),
+  password: z.string(),
+  profileImage: z.string(),
+  color: z.string(),
+  friends: z.array(z.string()),
+  notes: z.array(z.string()),
+  bookmarks: z.array(z.string()),
+  version: BiblesSchema,
+  chapter: z.string(),
 });

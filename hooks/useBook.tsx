@@ -1,23 +1,22 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext, useEffect, useState } from "react";
 import {
-  BookStorageSchema,
   BooksSchema,
-  FontStorageSchema,
 } from "../config/schemas";
 import {
-  DEFAULT_BOOK_INFO,
+  DEFAULT_BOOK,
+  DEFAULT_CHAPTER,
   DEFAULT_CONTENT,
   DEFAULT_FILTER,
   DEFAULT_FONT_SIZE,
   DEFAULT_FONT_WEIGHT,
+  DEFAULT_VERSION,
   instanceBackend,
 } from "../config/constants";
 import { z } from "zod";
 import { getBooks, getChapter } from "../config/helpers";
 import {
   BibleType,
-  BookInfo,
   ContentType,
   FilterType,
   FontWeightType,
@@ -27,48 +26,27 @@ import {
 import { AuthContext } from "../contexts/AuthProvider";
 
 export default function useBook() {
-  const { user } = useContext(AuthContext)
+  const { user, updateUser } = useContext(AuthContext);
   const [fontSize, setFontSize] = useState<number>(DEFAULT_FONT_SIZE);
   const [fontWeight, setFontWeight] =
     useState<FontWeightType>(DEFAULT_FONT_WEIGHT);
-  const [bookInfo, setBookInfo] = useState<BookInfo>(DEFAULT_BOOK_INFO);
   const [content, setContent] = useState<ContentType>(DEFAULT_CONTENT);
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
-  const [dataFetched, setDataFetched] = useState<boolean>(false);
   const [filter, setFilter] = useState<FilterType>(DEFAULT_FILTER);
   const [bookOptions, setBookOptions] = useState<z.infer<typeof BooksSchema>[]>(
     []
   );
 
-  async function getLocalData() {
-    try {
-      const res = await AsyncStorage.getItem("SSData");
-      if (res !== null) {
-        const bookData = BookStorageSchema.parse(JSON.parse(res));
-        setBookInfo({
-          version: bookData.version,
-          book: bookData.book,
-          chapter: bookData.chapter,
-        });
-      }
-      const res2 = await AsyncStorage.getItem("SSFont");
-      if (res2 !== null) {
-        const fontData = FontStorageSchema.parse(JSON.parse(res2));
-        setFontSize(fontData.fontSize);
-        setFontWeight(fontData.fontWeight as FontWeightType);
-      }
-    } catch (err: any) {}
-  }
-
   async function setBookData(version: BibleType, chapter: string) {
+    if (user === null) return;
     try {
-      const book = chapter.slice(0, 3);
-      setBookInfo({ version, book, chapter });
-      await AsyncStorage.setItem(
-        "SSData",
-        JSON.stringify({ version, book, chapter })
-      );
+      updateUser({ ...user, version, chapter });
+      await instanceBackend.patch("/user/book", {
+        _id: user._id,
+        version,
+        chapter,
+      });
     } catch (err: any) {}
   }
 
@@ -94,9 +72,9 @@ export default function useBook() {
         lines: text,
         lineNumbers: numbers,
         userId: user._id,
-        version: bookInfo.version.id,
-        book: bookInfo.book,
-        chapter: bookInfo.chapter,
+        version: user.version.id,
+        book: user.chapter.split(".")[0],
+        chapter: user.chapter,
         content: input,
       });
       setSelectedLines([]);
@@ -133,9 +111,10 @@ export default function useBook() {
   }
 
   async function fetchContent() {
+    if (user === null) return;
     setContent({ lines: [], next: content.next, previous: content.previous });
     try {
-      const res = await getChapter(bookInfo.version.id, bookInfo.chapter);
+      const res = await getChapter(user.version.id, user.chapter);
       if (res === null) return;
       setContent({
         lines: res.content,
@@ -146,11 +125,10 @@ export default function useBook() {
   }
 
   async function fetchNotes() {
+    if (user === null) return
     try {
       const res = await instanceBackend.get(
-        `/note/${bookInfo.version.id}/${
-          bookInfo.chapter
-        }/${user?._id}`
+        `/note/${user.version.id}/${user.chapter}/${user?._id}`
       );
       setNotes(res.data.notes);
     } catch (err: any) {}
@@ -159,32 +137,25 @@ export default function useBook() {
   useEffect(() => {
     async function fetchBooks() {
       try {
-        const res = await getBooks(bookInfo.version.id);
+        const res = await getBooks(user!.version.id);
         if (res === null) return;
         setBookOptions(res);
       } catch (err: any) {}
     }
 
     fetchBooks();
-  }, [bookInfo.version]);
+  }, [user?.version]);
 
   useEffect(() => {
-    if (!dataFetched) return;
     fetchContent();
     fetchNotes();
-  }, [bookInfo]);
-
-  useEffect(() => {
-    setDataFetched(true);
-    getLocalData();
-  }, []);
+  }, [user]);
 
   return {
-    version: bookInfo.version,
-    book: bookInfo.book,
-    chapter: bookInfo.chapter,
+    version: user?.version ?? DEFAULT_VERSION,
+    book: user?.chapter?.split(".")[0] ?? DEFAULT_BOOK,
+    chapter: user?.chapter ?? DEFAULT_CHAPTER,
     bookOptions,
-    getLocalData,
     setBookData,
     notes,
     content,
@@ -195,6 +166,6 @@ export default function useBook() {
     setFilter,
     fontSize,
     fontWeight,
-    setFontData
+    setFontData,
   };
 }
