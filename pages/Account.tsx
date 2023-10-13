@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
   FlatList,
@@ -10,10 +9,8 @@ import {
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import * as ImagePicker from "expo-image-picker";
-import { uploadProfilePic } from "../config/helpers";
-import ProfileImage from "../components/ProfileImage";
-import { FontAwesome } from "@expo/vector-icons";
+// import * as ImagePicker from "expo-image-picker";
+// import { uploadProfilePic } from "../config/helpers";
 import { NoteType } from "../config/types";
 import { colors, instanceBackend } from "../config/constants";
 import CondensedNote from "../components/CondensedNote";
@@ -28,32 +25,32 @@ type FileType = {
 };
 
 export default function Account() {
-  const { user, updateUser, friends } = useContext(AuthContext);
+  const { user, friends } = useContext(AuthContext);
   const { version, book, chapter } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
   const [notes, setNotes] = useState<NoteType[]>([]);
 
-  async function openImagePicker() {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+  // async function openImagePicker() {
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     allowsEditing: true,
+  //     aspect: [1, 1],
+  //     quality: 1,
+  //   });
 
-    if (result.canceled) return;
-    let uri = result.assets[0].uri;
-    let filename = uri.split("/").pop();
-    let match = /\.(\w+)$/.exec(filename ?? "");
-    let type = match ? `image/${match[1]}` : `image`;
-    await handleUpload({ uri, type, name: filename ?? "" });
-  }
+  //   if (result.canceled) return;
+  //   let uri = result.assets[0].uri;
+  //   let filename = uri.split("/").pop();
+  //   let match = /\.(\w+)$/.exec(filename ?? "");
+  //   let type = match ? `image/${match[1]}` : `image`;
+  //   await handleUpload({ uri, type, name: filename ?? "" });
+  // }
 
-  async function handleUpload(file: FileType) {
-    if (user === null || file === null) return;
-    const { path } = await uploadProfilePic(user._id, file);
-    if (path !== null) updateUser({ ...user, profileImage: path });
-  }
+  // async function handleUpload(file: FileType) {
+  //   if (user === null || file === null) return;
+  //   const { path } = await uploadProfilePic(user._id, file);
+  //   if (path !== null) updateUser({ ...user, profileImage: path });
+  // }
 
   async function fetchNotes() {
     if (user === null) return;
@@ -69,17 +66,6 @@ export default function Account() {
 
   return (
     <View style={styles.page}>
-      <View style={styles.header}>
-        <View style={styles.profileContainer}>
-          <Pressable onPress={openImagePicker}>
-            <ProfileImage size={50} user={user} />
-          </Pressable>
-          <Text style={styles.username}>{user?.username}</Text>
-        </View>
-        <TouchableOpacity onPress={() => navigate("Settings")}>
-          <FontAwesome style={styles.settings} name="cog" />
-        </TouchableOpacity>
-      </View>
       <ScrollView>
         <View style={styles.row}>
           <Text style={styles.rowTitle}>Your Notes</Text>

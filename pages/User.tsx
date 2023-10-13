@@ -1,5 +1,4 @@
 import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import {
   View,
   Text,
@@ -9,44 +8,21 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { NoteType, StackParamList, UserType } from "../config/types";
-import { AuthContext } from "../contexts/AuthProvider";
 import { useContext, useEffect, useState } from "react";
 import { colors, instanceBackend } from "../config/constants";
-import ProfileImage from "../components/ProfileImage";
 import CondensedNote from "../components/CondensedNote";
 import CondensedUser from "../components/CondensedUser";
 import { NavContext } from "../contexts/navigation";
 
 type UserProps = {
   route: RouteProp<StackParamList, "User">;
-  navigation: StackNavigationProp<StackParamList, "User">;
 };
 
-export default function User({ route, navigation }: UserProps) {
+export default function User({ route }: UserProps) {
   const pageUser = route.params.user;
-  const { user, updateUser } = useContext(AuthContext);
   const { navigate } = useContext(NavContext);
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [friends, setFriends] = useState<UserType[]>([]);
-  const friend = user?.friends.includes(pageUser._id);
-
-  async function handleFriend() {
-    if (user === null) return;
-    try {
-      await instanceBackend.patch(`/user/friend`, {
-        _id: user._id,
-        friend_id: pageUser._id,
-        friend,
-      });
-      if (friend)
-        return updateUser({
-          ...user,
-          friends: [...user.friends].filter((f) => f !== pageUser._id),
-        });
-
-      updateUser({ ...user, friends: [...user.friends, pageUser._id] });
-    } catch (err: any) {}
-  }
 
   async function fetchNotes() {
     try {
@@ -69,17 +45,6 @@ export default function User({ route, navigation }: UserProps) {
 
   return (
     <View style={styles.page}>
-      <View style={styles.header}>
-        <View style={styles.profileContainer}>
-          <ProfileImage size={50} user={pageUser} />
-          <Text style={styles.username}>{pageUser.username}</Text>
-        </View>
-        <TouchableOpacity onPress={handleFriend} style={styles.followBtn}>
-          <Text style={styles.followText}>
-            {friend ? "Remove Friend" : "Add Friend"}
-          </Text>
-        </TouchableOpacity>
-      </View>
       <ScrollView>
         <View style={styles.row}>
           <Text style={styles.rowTitle}>{pageUser.username + "'s"} Notes</Text>

@@ -6,18 +6,21 @@ import {
   ActivityIndicator,
   FlatList,
 } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { BookContext } from "../contexts/BookProvider";
 import { colors, instanceAPI } from "../config/constants";
 import { VerseSchema } from "../config/schemas";
 import { VerseType } from "../config/types";
 import { NavContext } from "../contexts/navigation";
-import Searchbar from "../components/Searchbar";
 
-export default function Search() {
+type SearchProps = {
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>
+}
+
+export default function Search({search, setSearch}: SearchProps) {
   const { version, setBookData } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
-  const [search, setSearch] = useState<string>("");
   const [verseStatus, setVerseStatus] = useState<
     "loading" | "no match" | "done"
   >("done");
@@ -61,11 +64,6 @@ export default function Search() {
 
   return (
     <View>
-      <Searchbar
-        search={search}
-        setSearch={setSearch}
-        containerStyles={{ paddingTop: 30, backgroundColor: colors.bg }}
-      />
       <View style={styles.page}>
         {verseStatus === "loading" && <ActivityIndicator />}
         {verseStatus === "no match" && <Text>No matches for {search}</Text>}

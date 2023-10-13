@@ -4,16 +4,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Dimensions,
   ActivityIndicator,
 } from "react-native";
-import { createRef, useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { getLineNum } from "../config/helpers";
 import { Ionicons } from "@expo/vector-icons";
 import { BookContext } from "../contexts/BookProvider";
-import ReadHeader from "../components/ReadHeader";
 import Line from "../components/Line";
 import { colors } from "../config/constants";
 import { NavContext } from "../contexts/navigation";
@@ -21,8 +17,6 @@ import { NavContext } from "../contexts/navigation";
 export default function Read() {
   const {
     version,
-    book,
-    chapter,
     setBookData,
     content,
     notes,
@@ -30,9 +24,6 @@ export default function Read() {
     handleSelectLine,
   } = useContext(BookContext);
   const { navigate } = useContext(NavContext);
-  const [scrolling, setScrolling] = useState<boolean>(false);
-  const [prevScroll, setPrevScroll] = useState<number>(0);
-  const scrollRef = createRef<ScrollView>();
 
   function getNotes(lineNum: number) {
     let validNotes = [];
@@ -42,38 +33,16 @@ export default function Read() {
     return validNotes;
   }
 
-  function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-    const currentScroll = event.nativeEvent.contentOffset.y;
-    const height =
-      event.nativeEvent.contentSize.height - Dimensions.get("window").height;
-    if (
-      (currentScroll < prevScroll && currentScroll < height - 30) ||
-      currentScroll < 30
-    )
-      setScrolling(false);
-    else setScrolling(true);
-
-    setPrevScroll(currentScroll);
-  }
-
   function handlePageChange(direction: "next" | "last") {
     if (direction === "next") setBookData(version, content.next);
     else setBookData(version, content.previous);
   }
 
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ y: 0, animated: false });
-  }, [version, book, chapter]);
-
   return (
     <View style={{ flex: 1, position: "relative" }}>
-      <ReadHeader scroll={scrolling} />
       <ScrollView
-        ref={scrollRef}
         style={{ flex: 4 }}
         contentContainerStyle={styles.textContainer}
-        onScroll={handleScroll}
-        scrollEventThrottle={60}
       >
         {content.lines.length === 0 ? (
           <ActivityIndicator style={{ marginTop: 200 }} />
@@ -110,22 +79,22 @@ export default function Read() {
         )}
       </ScrollView>
       {selectedLines.length !== 0 && (
-          <TouchableOpacity
-            style={styles.addBtn}
-            onPress={() =>
-              navigate("CreateNote", {
-                lines: {
-                  numbers: selectedLines,
-                  text: content.lines.slice(
-                    selectedLines[0] - 1,
-                    selectedLines[selectedLines.length - 1]
-                  ),
-                },
-              })
-            }
-          >
-            <Ionicons name="pencil" color={colors.text} size={30} />
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={() =>
+            navigate("CreateNote", {
+              lines: {
+                numbers: selectedLines,
+                text: content.lines.slice(
+                  selectedLines[0] - 1,
+                  selectedLines[selectedLines.length - 1]
+                ),
+              },
+            })
+          }
+        >
+          <Ionicons name="pencil" color={colors.text} size={30} />
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -134,7 +103,7 @@ export default function Read() {
 const styles = StyleSheet.create({
   textContainer: {
     paddingHorizontal: 20,
-    paddingTop: 100,
+    paddingTop: 20,
   },
   navBtnContainer: {
     paddingTop: 20,

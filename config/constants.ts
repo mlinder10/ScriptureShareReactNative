@@ -67,14 +67,14 @@ export const BookProviderDefault: any = {
   setFilter: () => {},
   fontSize: DEFAULT_FONT_SIZE,
   fontWeight: DEFAULT_FONT_WEIGHT,
-  setFontData: () => {}
+  setFontData: () => {},
 };
 
 export const AuthProviderDefault = {
   user: null,
   friends: [],
-  loginWithUsernameAndPassword: async () => {},
-  register: async () => {},
+  loginWithUsernameAndPassword: async () => null,
+  register: async () => null,
   logout: () => {},
   updateUser: () => {},
   setToken: async () => {},

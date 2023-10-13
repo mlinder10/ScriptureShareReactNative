@@ -7,7 +7,7 @@ import {
 } from "./schemas";
 import { z } from "zod";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type UserType = z.infer<typeof UserSchema>;
 

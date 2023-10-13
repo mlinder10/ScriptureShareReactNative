@@ -64,10 +64,10 @@ export default function Searchbar({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    padding: 20,
     alignItems: "center",
     gap: 10,
     backgroundColor: colors.bg,
+    width: "90%"
   },
   barContainer: {
     backgroundColor: colors.bgSecondary,
